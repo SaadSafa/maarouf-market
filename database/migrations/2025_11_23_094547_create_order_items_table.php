@@ -6,34 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('order_id')
-              ->constrained('orders')
-              ->onDelete('cascade');
+                ->constrained('orders')
+                ->onDelete('cascade');
 
             $table->foreignId('product_id')
                 ->constrained('products')
                 ->onDelete('cascade');
 
-            $table->integer('quantity');
-            
-            // Save price at checkout
-            $table->decimal('price_at_time', 10, 2);
+            $table->integer('quantity')->default(1);
+
+            // PRICE AT THE MOMENT OF ORDER
+            $table->decimal('price', 10, 2); // <-- THIS MUST BE "price"
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('order_items');

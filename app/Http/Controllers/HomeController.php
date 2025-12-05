@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\OfferSlider;
+use Illuminate\Support\Facades\Auth;
 
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
+
         //Search
         $search = $request->input('search');
 
