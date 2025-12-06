@@ -20,6 +20,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => 'test12345',
+        ]);
+
+        $this->call([
+            CategorySeeder::class,
+            ProductSeeder::class,
+            SliderSeeder::class,
         ]);
     }
 }

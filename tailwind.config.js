@@ -9,6 +9,11 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        'toast',
+        'toast.show',
+    ],
+
     theme: {
         extend: {
             fontFamily: {

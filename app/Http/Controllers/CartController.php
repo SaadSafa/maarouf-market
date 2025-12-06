@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\CartItem;
-use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -21,8 +20,12 @@ class CartController extends Controller
 
     public function add(Request $request, $id)
     {
+        $validated = $request->validate([
+            'quantity' => ['nullable', 'integer', 'min:1'],
+        ]);
+
         $product = Product::findOrFail($id);
-        $quantity = $request->input('quantity', 1);
+        $quantity = $validated['quantity'] ?? 1;
 
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
@@ -39,25 +42,49 @@ class CartController extends Controller
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
                 'quantity' => $quantity,
+                'price_at_time' => $product->price,
             ]);
         }
 
-        return back()->with('success', 'Item added to cart!');
+        return response()->json([
+            'success' => true,
+            'cartCount' => $cart->items()->count(),
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        $item = CartItem::findOrFail($id);
-        $item->quantity = $request->quantity;
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $item = $this->findUserCartItem($id);
+        $item->quantity = $validated['quantity'];
         $item->save();
 
-        return back();
+        return response()->json([
+            'lineTotal' => number_format($item->quantity * $item->price_at_time, 0)
+        ]);
     }
 
     public function remove($id)
     {
-        CartItem::findOrFail($id)->delete();
+        $item = $this->findUserCartItem($id);
+        $item->delete();
 
-        return back();
+        //return updated cart count
+        $cart = Cart::where('user_id', Auth::id())->first();
+        $newCount = $cart ? $cart->items()->count() : 0;
+
+        return response()->json(['success' => true, 'cartCount' => $newCount]);
+    }
+
+    private function findUserCartItem($id): CartItem
+    {
+        return CartItem::where('id', $id)
+            ->whereHas('cart', function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->firstOrFail();
     }
 }

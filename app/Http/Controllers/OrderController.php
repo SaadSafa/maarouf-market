@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $order = Order::where('user_id', Auth::id())
+        $orders = Order::where('user_id', Auth::id())
                         ->latest()
                         ->get();
 
@@ -25,5 +25,31 @@ class OrderController extends Controller
                         ->firstOrFail();
 
         return view('frontend.order-details', compact('order'));
+    }
+
+    public function cancel($id)
+    {
+        $order = Order::where('user_id', Auth::id())
+                        ->where('id', $id)
+                        ->firstOrFail();
+
+        if($order->status != 'pending'){
+            return response()->json([
+                'success' => false,
+                'message' => 'This order cannot be cancelled.'
+
+            ],400);
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'newStatus' => 'cancelled',
+            'badgeColor' => 'bg-red-600',
+            'message' => 'Your orde has been cancelled.'
+        ]);
+
     }
 }

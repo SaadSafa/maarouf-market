@@ -7,30 +7,51 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\OfferSlider;
 
-
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        //Search
         $search = $request->input('search');
+        $categoryId = $request->filled('category')
+            ? (int) $request->input('category')
+            : null;
 
-        if($search){
-            // Filter products by name or description
-            $products = Product::where('name', 'LIKE', "%$search")
-                                ->orWhere('description', 'LIKE', "%$search")
-                                ->paginate(20);
-        }else {
-            // Default latest products
-            $products = Product::latest()->paginate(20); 
-        }
-
-        // Load Category
+        // Load active categories
         $categories = Category::where('is_active', 1)->get();
 
-        //Load slider images
+        // If category isn't valid, ignore it
+        if ($categoryId && ! $categories->contains('id', $categoryId)) {
+            $categoryId = null;
+        }
+
+        // Load active sliders
         $sliders = OfferSlider::where('is_active', 1)->get();
 
-        return view('frontend.home', compact('products','categories', 'sliders', 'search'));
+        // Product query
+        $query = Product::where('is_active', 1);
+
+        // Filter by category
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Filter by search
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Pagination
+        $products = $query->latest()->paginate(10);
+
+        return view('frontend.home', compact(
+            'products',
+            'categories',
+            'sliders',
+            'search',
+            'categoryId'
+        ));
     }
 }

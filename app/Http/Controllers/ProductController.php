@@ -9,11 +9,14 @@ class ProductController extends Controller
 {
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('id', $id)
+                          ->where('is_active', 1)
+                          ->firstOrFail();
 
         // Related products from same cateogry
         $related = Product::where('category_id', $product->category_id)
                             ->where('id', '!=', $product->id)
+                            ->where('is_active', 1)
                             ->limit(6)
                             ->get();
 

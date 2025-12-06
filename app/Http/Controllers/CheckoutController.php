@@ -21,6 +21,14 @@ class CheckoutController extends Controller
 
     public function confirm(Request $request)
     {
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:50'],
+            'address' => ['required', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'note' => ['nullable', 'string', 'max:1000'],
+        ]);
+
         $cart = Cart::where('user_id', Auth::id())
                     ->with('items.product')
                     ->first();
@@ -31,10 +39,11 @@ class CheckoutController extends Controller
 
         $order = Order::create([
             'user_id' => Auth::id(),
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'location' => $request->location,
-            'note' => $request->note,
+            'full_name' => $validated['full_name'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'location' => $validated['location'] ?? null,
+            'note' => $validated['note'] ?? null,
             'status' => 'pending',
             'total_price' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
         ]);
@@ -44,13 +53,13 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
-                'price' => $item->product->price,
+                'price_at_time' => $item->product->price,
             ]);
         }
 
         // Clear cart
         $cart->items()->delete();
 
-        return redirect()->route('order.index')->with('success', 'Order placed successfully!');
+        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
     }
 }
