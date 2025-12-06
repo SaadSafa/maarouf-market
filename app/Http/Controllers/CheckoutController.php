@@ -36,7 +36,7 @@ class CheckoutController extends Controller
             'location' => $request->location,
             'note' => $request->note,
             'status' => 'pending',
-            'total_price' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
+            'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
         ]);
 
         foreach($cart->items as $item){

@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $order = Order::where('user_id', Auth::id())
+        $orders = Order::where('user_id', Auth::id())
                         ->latest()
                         ->get();
 

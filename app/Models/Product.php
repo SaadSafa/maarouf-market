@@ -34,4 +34,14 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    
+    public static function monthlyChanged(){
+        $lastMonth = Product::whereMonth('created_at', now()->subMonth()->month)->count();
+$thisMonth = Product::whereMonth('created_at', now()->month)->count();
+
+$change = $lastMonth > 0
+    ? (($thisMonth - $lastMonth) / $lastMonth) * 100
+    : 0;
+    return $change;
+    }
 }

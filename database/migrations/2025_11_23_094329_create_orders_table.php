@@ -6,44 +6,45 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')
-              ->constrained('users')
-              ->onDelete('cascade');
+            // CUSTOMER INFO
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('customer_name')->nullable();
+            $table->string('customer_phone')->nullable();
+            $table->string('area')->nullable();
+            $table->string('address')->nullable();
 
-            $table->decimal('total_price', 10, 2);
+            // ORDER META
+            $table->string('order_code')->nullable()->unique();
+            $table->string('source')->nullable();                // app, whatsapp, phone, etc.
+            $table->text('manager_notes')->nullable();
 
-            $table->string('full_name');
-            $table->string('phone');
-            $table->string('address');
-            $table->string('location')->nullable();
-            $table->text('note')->nullable();
+            // PAYMENT
+            $table->enum('payment_method', ['cash', 'card', 'online'])
+                  ->default('cash');
 
+            // ORDER STATUS
             $table->enum('status', [
                 'pending',
-                'preparing',
-                'on_the_way',
+                'placed',
+                'picking',
+                'picked',
+                'indelivery',
                 'completed',
-                'cancelled'
-            ])->default('pending');
+                'canceled'
+            ])->default('placed');
 
-            $table->enum('payment_method', ['cash', 'card', 'online'])
-                ->default('cash');
+            // FINANCIAL
+            $table->decimal('total', 10, 2)->default(0);
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');

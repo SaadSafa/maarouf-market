@@ -15,14 +15,44 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manage products
-    Route::resource('products', AdminProductController::class);
+Route::get('/products/search', [AdminProductController::class, 'Search'])->name('admin.products.search');
+
+Route::post('products/{product}/update-status', [AdminProductController::class,'updateStatus'])
+    ->name('admin.products.updateStatus');
+
+    Route::resource('products', AdminProductController::class)
+        ->names('admin.products');
 
     // Manage categories
-    Route::resource('categories', AdminCategoryController::class);
+    Route::resource('categories', AdminCategoryController::class)
+        ->names('admin.categories');
 
     // Manage orders
-    Route::resource('orders', AdminOrderController::class);
 
-    // Manage sliders (offers)
-    Route::resource('sliders', AdminSliderController::class);
+    Route::get('/orders/pending-count', [AdminOrderController::class,'GetPendingOrders'])
+    ->name('admin.orders.pendingCount');
+
+    Route::resource('orders', AdminOrderController::class)
+        ->names('admin.orders');
+
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
+        ->name('admin.orders.updateStatus');
+
+    Route::get('/orders/{order}/items', [AdminOrderController::class, 'getItems'])
+        ->name('admin.orders.items');
+    Route::post('/orders/{order}/items/add', [AdminOrderController::class, 'addItem'])
+        ->name('admin.orders.items.add');
+
+    Route::patch('/orders/items/{item}/update', [AdminOrderController::class, 'updateItem'])
+        ->name('admin.orders.items.update');
+
+    Route::delete('/orders/items/{item}/delete', [AdminOrderController::class, 'deleteItem'])
+        ->name('admin.orders.items.delete');
+        
+    // Manage sliders
+    Route::resource('sliders', AdminSliderController::class)
+        ->names('admin.sliders')
+        ->parameters(['sliders' => 'offerSlider']);
+
+
 });

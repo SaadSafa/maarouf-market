@@ -1,0 +1,10 @@
+.bgordercomplete{
+color: white;
+background-color: rgb(8, 207, 8);
+font-weight: 500;
+}
+.bgordercanceled{
+    color: white;
+    background-color: red;
+    font-weight: 500;
+}

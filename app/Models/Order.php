@@ -11,7 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'total_price',
+        'total',
         'full_name',
         'phone',
         'address',
@@ -27,7 +27,8 @@ class Order extends Model
     }
 
     public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+{
+    return $this->hasMany(\App\Models\OrderItem::class, 'order_id');
+}
+
 }

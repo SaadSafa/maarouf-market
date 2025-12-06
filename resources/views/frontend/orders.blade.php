@@ -21,7 +21,7 @@
 
                         <div class="text-right">
                             <p class="text-sm font-bold text-green-600">
-                                {{ number_format($order->total_price, 0) }} LBP
+                                {{ number_format($order->total, 0) }} LBP
                             </p>
                             
                             @php
