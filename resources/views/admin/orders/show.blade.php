@@ -19,7 +19,7 @@
             <select id="orderStatus"
                     data-id="{{ $order->id }}"
                     class="px-3 py-2 border rounded-xl text-sm">
-                @foreach(['pending','placed','picking','picked','indelivery','completed','canceled'] as $st)
+                @foreach(['pending','placed','picking','picked','indelivery','completed','cancelled'] as $st)
                     <option value="{{ $st }}" {{ $order->status == $st ? 'selected' : '' }}>
                         {{ ucfirst($st) }}
                     </option>

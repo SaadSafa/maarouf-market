@@ -30,7 +30,7 @@ class AdminOrderController extends Controller
         if ($tab === 'current') {
             $query->whereIn('status', ['placed', 'picking', 'picked', 'indelivery']);
         } elseif ($tab === 'history') {
-            $query->whereIn('status', ['completed', 'canceled']);
+            $query->whereIn('status', ['completed', 'cancelled']);
         } elseif ($tab === 'pending') {
             $query->where('status', 'pending');
         }
@@ -79,9 +79,10 @@ class AdminOrderController extends Controller
     // ---------------------------
     // AJAX: GET ORDER ITEMS
     // ---------------------------
-public function items(Order $order) {
-    return $order->items()->with('product')->get();
-}
+    public function getItems(Order $order)
+    {
+        return $order->items()->with('product')->get();
+    }
 
 
 
@@ -91,7 +92,7 @@ public function items(Order $order) {
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|in:placed,picking,picked,indelivery,completed,canceled,pending'
+            'status' => 'required|in:placed,picking,picked,indelivery,completed,cancelled,pending'
         ]);
 
         $order->status = $request->status;
@@ -144,30 +145,37 @@ public function addItem(Request $request, Order $order)
 
 
 
-public function updateItem(Request $request, OrderItem $item) {
-try{
-    
-    \Log::info("ADD ITEM DEBUG", [
-            'order_id' => $item->qty,
-            'request'  => $request->all()
-        ]);
-    $item->update(['quantity' => $request->quantity]);
+    public function updateItem(Request $request, OrderItem $item)
+    {
+        try {
+            $validated = $request->validate([
+                'quantity' => ['required', 'integer', 'min:1'],
+            ]);
 
-  return response()->json([
-    'items' => $item->order->items()->with('product')->get()
-    
-]);
-}
-catch(Exception $e){
+            \Log::info('ORDER ITEM UPDATE', [
+                'order_id' => $item->order_id,
+                'product_id' => $item->product_id,
+                'request' => $request->all(),
+            ]);
 
-      \Log::error("ADD ITEM ERROR", [
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ]);
-}
+            $item->update(['quantity' => $validated['quantity']]);
 
-}
+            return response()->json([
+                'items' => $item->order->items()->with('product')->get(),
+            ]);
+        } catch (Exception $e) {
+            \Log::error('ORDER ITEM UPDATE ERROR', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 public function deleteItem(OrderItem $item) {
@@ -184,7 +192,7 @@ public function deleteItem(OrderItem $item) {
 
 public function GetPendingOrders(){
 
-    $count = Order::whereNotIn('status', ['completed', 'canceled'])->count();
+    $count = Order::whereNotIn('status', ['completed', 'cancelled'])->count();
 
     return response()->json([
         'PendingOrders' => $count

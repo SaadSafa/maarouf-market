@@ -1,84 +1,115 @@
 @extends('layouts.app')
 
+@section('title', $product->name)
+
 @section('content')
-<div class="max-w-5xl mx-auto px-4">
-    <div class="grid md:grid-cols-2 gap-6">
-        {{-- Image --}}
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div class="h-64 md:h-80 bg-gray-100">
-                @if($product->image)
-                    <img src="{{ asset('storage/'.$product->image) }}"
-                         alt="{{ $product->name }}"
-                         class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                        No image available
-                    </div>
-                @endif
+
+    <section class="mt-3 mb-6">
+
+        {{-- ========================== --}}
+        {{-- Product Image --}}
+        {{-- ========================== --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-50 overflow-hidden">
+            <div class="overflow-hidden">
+                <center>
+                <img height="50px"
+                    src="{{ $product->image ? asset('storage/'.$product->image) : 'https://via.placeholder.com/600x600?text=Product' }}"
+                    alt="{{ $product->name }}"
+                >
+                </center>
             </div>
         </div>
 
-        {{-- Info --}}
-        <div class="bg-white rounded-2xl shadow-sm p-5 flex flex-col">
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">
+
+        {{-- ========================== --}}
+        {{-- Product Information --}}
+        {{-- ========================== --}}
+        <div class="mt-5 space-y-3">
+
+            {{-- Title --}}
+            <h1 class="text-xl font-bold text-slate-900">
                 {{ $product->name }}
             </h1>
-            <p class="text-sm text-gray-600 mb-3">
-                {{ $product->description }}
-            </p>
 
-            <p class="text-2xl font-extrabold text-green-600 mb-4">
-                {{ number_format($product->price, 0) }} LBP
-            </p>
-
-            @auth
-                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
-                    @csrf
-                    <div class="flex items-center gap-3 mb-3">
-                        <label class="text-sm text-gray-700">Quantity:</label>
-                        <input type="number" name="quantity" value="1" min="1"
-                               class="w-20 px-2 py-1 border rounded-lg text-sm">
-                    </div>
-                    <button type="submit"
-                            class="w-full bg-green-600 text-white py-2 rounded-full font-semibold hover:bg-green-700">
-                        Add to Cart
-                    </button>
-                </form>
-            @else
-                <p class="text-sm text-gray-500 mt-4">
-                    <a href="{{ route('login') }}" class="text-green-600 underline">Login</a> to add items to your cart.
+            {{-- Unit --}}
+            @if(!empty($product->unit))
+                <p class="text-sm text-slate-500">
+                    Unit: {{ $product->unit }}
                 </p>
-            @endauth
-        </div>
-    </div>
+            @endif
 
-    {{-- Related products --}}
-    @if($related->count())
-        <div class="mt-8">
-            <h2 class="text-lg font-bold text-gray-800 mb-3">Related Products</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @foreach($related as $item)
-                    <a href="{{ route('product.show', $item->id) }}"
-                       class="bg-white rounded-xl shadow-sm overflow-hidden block">
-                        <div class="h-28 bg-gray-100">
-                            @if($item->image)
-                                <img src="{{ asset('storage/'.$item->image) }}"
-                                     alt="{{ $item->name }}"
-                                     class="w-full h-full object-cover">
-                            @endif
-                        </div>
-                        <div class="p-2">
-                            <p class="text-xs font-semibold text-gray-900 line-clamp-2">
-                                {{ $item->name }}
-                            </p>
-                            <p class="text-xs text-green-600 font-bold mt-1">
-                                {{ number_format($item->price, 0) }} LBP
-                            </p>
-                        </div>
+            {{-- Description --}}
+            @if(!empty($product->description))
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    {{ $product->description }}
+                </p>
+            @endif
+
+            {{-- Category --}}
+            @if($product->category)
+                <p class="text-sm text-slate-500">
+                    Category:
+                    <a href="{{ url('/?category=' . $product->category->id) }}"
+                       class="text-green-700 font-medium">
+                        {{ $product->category->name }}
                     </a>
-                @endforeach
-            </div>
+                </p>
+            @endif
+
+
+            {{-- Price --}}
+            <p class="text-2xl font-bold text-green-600">
+                {{ number_format($product->price, 0) }} L.L
+            </p>
+
         </div>
-    @endif
-</div>
+
+
+        {{-- ========================== --}}
+        {{-- Add to Cart --}}
+        {{-- ========================== --}}
+        <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="add-to-cart-form flex  items-center gap-3">
+                @csrf
+
+                {{-- Quantity Selector --}}
+                <div class="flex items-center rounded-full border border-slate-300 overflow-hidden text-sm bg-white">
+                     <button type="button"
+            onclick="let input=this.parentNode.querySelector('input'); if(input.value>1) input.stepDown()"
+            class="px-3 py-2 text-slate-700 hover:bg-slate-100 transition text-sm font-bold">
+                -
+            </button>
+
+            <input
+                type="number"
+                name="quantity"
+                min="1"
+                value="1"
+                class="w-12 text-center text-sm font-semibold border-x border-slate-200 bg-white
+                    focus:outline-none [appearance:textfield]
+                    [&::-webkit-inner-spin-button]:appearance-none
+                    [&::-webkit-outer-spin-button]:appearance-none" />
+
+            <button type="button"
+                    onclick="this.parentNode.querySelector('input').stepUp()"
+                    class="px-3 py-2 text-slate-700 hover:bg-slate-100 transition text-sm font-bold">
+                +
+            </button>
+
+        </div>
+
+                {{-- Add to cart button --}}
+                <button type="submit"
+                        class="flex-1 inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700
+                               text-white font-semibold text-sm py-2 rounded-full shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 4.5h2.386a1.5 1.5 0 0 1 1.447 1.123l.347 1.387m0 0 1.248 4.992A1.5 1.5 0 0 0 9.147 13.5h8.978a1.5 1.5 0 0 0 1.458-1.126l1.191-4.754a.75.75 0 0 0-.728-.945H6.43" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm9 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg> Add to cart
+                </button>
+            </form>
+        </div>
+
+    </section>
+
 @endsection

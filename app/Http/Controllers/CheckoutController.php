@@ -21,6 +21,14 @@ class CheckoutController extends Controller
 
     public function confirm(Request $request)
     {
+        $validated = $request->validate([
+            'customer_name' => ['required', 'string', 'max:255'],
+            'customer_phone' => ['required', 'string', 'max:50'],
+            'address' => ['required', 'string', 'max:255'],
+            'area' => ['required', 'string', 'max:255'],
+            'note' => ['nullable', 'string', 'max:1000'],
+        ]);
+
         $cart = Cart::where('user_id', Auth::id())
                     ->with('items.product')
                     ->first();
@@ -29,28 +37,38 @@ class CheckoutController extends Controller
             return back()->with('error', 'Your cart is empty.');
         }
 
+        //checkout relies on each cart item's stored price_at_time snapshot
+        $orderTotal = $cart->items->sum(function($item){
+            $price = $item->price_at_time ?? $item->product->price;
+            return $item->quantity * $price;
+        });
+
         $order = Order::create([
             'user_id' => Auth::id(),
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'location' => $request->location,
-            'note' => $request->note,
-            'status' => 'pending',
-            'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
+            'customer_name' => $validated['customer_name'],
+            'customer_phone' => $validated['customer_phone'],
+            'address' => $validated['address'],
+            'area' => $validated['area'] ?? null,
+            'note' => $validated['note'] ?? null,
+            'status' => 'placed',
+            'total' => $orderTotal,
+            //'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
         ]);
 
         foreach($cart->items as $item){
+            $priceSnapshot = $item->price_at_time ?? $item->product->price;
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
-                'price' => $item->product->price,
+                'price' => $priceSnapshot,
+                //'price' => $item->product->price,
             ]);
         }
 
         // Clear cart
         $cart->items()->delete();
 
-        return redirect()->route('order.index')->with('success', 'Order placed successfully!');
+        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
     }
 }

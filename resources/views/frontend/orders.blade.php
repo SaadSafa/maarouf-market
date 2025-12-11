@@ -26,11 +26,14 @@
                             
                             @php
                                 $statusClass = match($order->status) {
-                                    'pending' => 'bg-yellow-100 text-yellow-700',
-                                    'preparing' => 'bg-blue-100 text-blue-700',
-                                    'on_the_way' => 'bg-purple-100 text-purple-700',
-                                    'completed' => 'bg-green-100 text-green-700',
-                                    default => 'bg-red-100 text-red-700',
+                                    'pending'     => 'bg-yellow-100 text-yellow-700',
+                                    'placed'      => 'bg-blue-100 text-blue-700',
+                                    'picking'     => 'bg-purple-100 text-purple-700',
+                                    'picked'      => 'bg-indigo-100 text-indigo-700',
+                                    'indelivery'  => 'bg-orange-100 text-orange-700',
+                                    'completed'   => 'bg-green-100 text-green-700',
+                                    'cancelled'   => 'bg-red-100 text-red-700',
+                                    default       => 'bg-gray-100 text-gray-700',
                                 };
                             @endphp
 

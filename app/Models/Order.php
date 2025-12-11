@@ -12,10 +12,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'total',
-        'full_name',
-        'phone',
+        'customer_name',
+        'customer_phone',
         'address',
-        'location',
+        'area',
         'note',
         'status',
         'payment_method',
@@ -28,7 +28,7 @@ class Order extends Model
 
     public function items()
 {
-    return $this->hasMany(\App\Models\OrderItem::class, 'order_id');
+    return $this->hasMany(OrderItem::class, 'order_id');
 }
 
 }

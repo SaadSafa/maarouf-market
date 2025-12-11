@@ -22,16 +22,19 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => bcrypt('12345678'),
-        //     'role'=> 'admin'
-        // ]);
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('test12345'),
+        ]);
 
-        //  Product::factory()->count(1000)->create();
-        // Category::factory()->count('50')->create();
-        // Order::factory()->count(10)->create();
-        OrderItem::factory()->count(2)->create();
+        $this->call([
+            CategorySeeder::class,
+            ProductSeeder::class,
+            SliderSeeder::class,
+        ]);
+
+        // Seed order items for testing (from incoming branch)
+        //OrderItem::factory()->count(2)->create();
     }
 }

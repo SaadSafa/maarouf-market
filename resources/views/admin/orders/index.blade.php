@@ -59,7 +59,7 @@
                     <option value="picked"     {{ request('status')=='picked'?'selected':'' }}>Picked</option>
                     <option value="indelivery" {{ request('status')=='indelivery'?'selected':'' }}>In Delivery</option>
                     <option value="completed"  {{ request('status')=='completed'?'selected':'' }}>Completed</option>
-                    <option value="canceled"   {{ request('status')=='canceled'?'selected':'' }}>Canceled</option>
+                    <option value="cancelled"   {{ request('status')=='cancelled'?'selected':'' }}>Cancelled</option>
                 </select>
 
                 <!-- Date -->
@@ -110,7 +110,7 @@
     @if ($tab != 'history')  
     <select id="orderStatus" class="status-select px-2 py-1 border rounded text-xs"
             data-id="{{ $order->id }}">
-        @foreach(['placed','picking','picked','indelivery','completed','canceled','pending'] as $st)
+        @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
             <option value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>
                 {{ ucfirst($st) }}
             </option>
@@ -122,7 +122,7 @@
 <span id="orderStatus" class="status-select px-2 py-1 border rounded text-xs @if ($order->status == 'completed') bgordercomplete @else bgordercanceled 
 @endif"
             data-id="{{ $order->id }}">
-        @foreach(['completed','canceled'] as $st)
+        @foreach(['completed','cancelled'] as $st)
         @if ($st === $order->status)
          <span value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>
                 {{ ucfirst($st) }}

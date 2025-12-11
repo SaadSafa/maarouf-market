@@ -11,15 +11,20 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
+            // only loggedin users  
+            $table->foreignId('user_id')
+                        ->constrained('users')
+                        ->onDelete('cascade');
+
             // CUSTOMER INFO
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('customer_name')->nullable();
-            $table->string('customer_phone')->nullable();
-            $table->string('area')->nullable();
-            $table->string('address')->nullable();
+            $table->string('customer_name');
+            $table->string('customer_phone');
+            $table->string('area');
+            $table->string('address');
+            $table->text('note')->nullable();
 
             // ORDER META
-            $table->string('order_code')->nullable()->unique();
+            $table->string('order_code')->nullable();
             $table->string('source')->nullable();                // app, whatsapp, phone, etc.
             $table->text('manager_notes')->nullable();
 
@@ -35,7 +40,7 @@ return new class extends Migration
                 'picked',
                 'indelivery',
                 'completed',
-                'canceled'
+                'cancelled'
             ])->default('placed');
 
             // FINANCIAL

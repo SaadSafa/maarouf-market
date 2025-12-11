@@ -26,4 +26,30 @@ class OrderController extends Controller
 
         return view('frontend.order-details', compact('order'));
     }
+
+    public function cancel($id)
+    {
+        $order = Order::where('user_id', Auth::id())
+                        ->where('id', $id)
+                        ->firstOrFail();
+
+        if($order->status != 'placed'){
+            return response()->json([
+                'success' => false,
+                'message' => 'This order cannot be cancelled.'
+
+            ],400);
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'newStatus' => 'cancelled',
+            'badgeColor' => 'bg-red-600',
+            'message' => 'Your order has been cancelled.'
+        ]);
+
+    }
 }
