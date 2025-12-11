@@ -79,6 +79,18 @@ class CartController extends Controller
         return response()->json(['success' => true, 'cartCount' => $newCount]);
     }
 
+    //function for updating the cart count badge
+    public function count()
+    {
+        $cart = Cart::where('user_id', Auth::id())
+                    ->withCount('items')
+                    ->first();
+
+        return response()->json([
+            'cartCount' => $cart?->items_count ?? 0,
+        ]);
+    }
+
     private function findUserCartItem($id): CartItem
     {
         return CartItem::where('id', $id)

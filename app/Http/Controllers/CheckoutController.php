@@ -22,10 +22,10 @@ class CheckoutController extends Controller
     public function confirm(Request $request)
     {
         $validated = $request->validate([
-            'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:50'],
+            'customer_name' => ['required', 'string', 'max:255'],
+            'customer_phone' => ['required', 'string', 'max:50'],
             'address' => ['required', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
+            'area' => ['required', 'string', 'max:255'],
             'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -37,23 +37,32 @@ class CheckoutController extends Controller
             return back()->with('error', 'Your cart is empty.');
         }
 
+        //checkout relies on each cart item's stored price_at_time snapshot
+        $orderTotal = $cart->items->sum(function($item){
+            $price = $item->price_at_time ?? $item->product->price;
+            return $item->quantity * $price;
+        });
+
         $order = Order::create([
             'user_id' => Auth::id(),
-            'full_name' => $validated['full_name'],
-            'phone' => $validated['phone'],
+            'customer_name' => $validated['customer_name'],
+            'customer_phone' => $validated['customer_phone'],
             'address' => $validated['address'],
-            'location' => $validated['location'] ?? null,
+            'area' => $validated['area'] ?? null,
             'note' => $validated['note'] ?? null,
-            'status' => 'pending',
-            'total_price' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
+            'status' => 'placed',
+            'total' => $orderTotal,
+            //'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
         ]);
 
         foreach($cart->items as $item){
+            $priceSnapshot = $item->price_at_time ?? $item->product->price;
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
-                'price_at_time' => $item->product->price,
+                'price' => $priceSnapshot,
+                //'price' => $item->product->price,
             ]);
         }
 

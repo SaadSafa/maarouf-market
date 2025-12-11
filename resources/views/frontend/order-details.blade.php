@@ -27,7 +27,7 @@
             @foreach($order->items as $item)
 
                 @php
-                    $lineTotal = $item->quantity * $item->price_at_time;
+                    $lineTotal = $item->quantity * $item->price;
                     $total += $lineTotal;
                 @endphp
 
@@ -46,7 +46,7 @@
                         </p>
 
                         <p class="text-xs text-slate-500">
-                            {{ number_format($item->price_at_time, 0) }} LBP × {{ $item->quantity }}
+                            {{ number_format($item->price, 0) }} LBP × {{ $item->quantity }}
                         </p>
                     </div>
 
@@ -71,12 +71,14 @@
 
             @php
                 $statusColor = match($order->status) {
-                    'pending'   => 'bg-yellow-500',
-                    'preparing' => 'bg-blue-500',
-                    'on_the_way'=> 'bg-purple-500',
-                    'completed' => 'bg-green-600',
-                    'cancelled' => 'bg-red-600',
-                    default     => 'bg-gray-500'
+                    'pending'     => 'bg-yellow-500',
+                    'placed'      => 'bg-blue-500',
+                    'picking'     => 'bg-purple-500',
+                    'picked'      => 'bg-indigo-500',
+                    'indelivery'  => 'bg-orange-500',
+                    'completed'   => 'bg-green-600',
+                    'cancelled'   => 'bg-red-600',
+                    default       => 'bg-gray-500'
                 };
             @endphp
 
@@ -91,7 +93,7 @@
 
             {{-- Basic Info --}}
             <p class="text-xs text-slate-600 mb-1">
-                <span class="font-semibold">Name:</span> {{ $order->full_name }}
+                <span class="font-semibold">Name:</span> {{ $order->customer_name }}
             </p>
 
             <p class="text-xs text-slate-600 mb-1">
@@ -99,12 +101,12 @@
             </p>
 
             <p class="text-xs text-slate-600 mb-1">
-                <span class="font-semibold">Phone:</span> {{ $order->phone }}
+                <span class="font-semibold">Phone:</span> {{ $order->customer_phone }}
             </p>
 
             @if($order->location)
             <p class="text-xs text-slate-600 mb-1">
-                <span class="font-semibold">Location:</span> {{ $order->location }}
+                <span class="font-semibold">Location:</span> {{ $order->area }}
             </p>
             @endif
 
@@ -122,7 +124,7 @@
                 <span class="text-green-600 text-lg">{{ number_format($total, 0) }} LBP</span>
             </div>
 
-            @if ($order->status === 'pending')
+            @if ($order->status === 'placed')
                 <button id="cancel-order-btn"
                         data-id="{{ $order->id }}"
                         onclick="openCancelModal()"

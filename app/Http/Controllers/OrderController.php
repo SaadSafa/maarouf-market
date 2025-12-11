@@ -33,7 +33,7 @@ class OrderController extends Controller
                         ->where('id', $id)
                         ->firstOrFail();
 
-        if($order->status != 'pending'){
+        if($order->status != 'placed'){
             return response()->json([
                 'success' => false,
                 'message' => 'This order cannot be cancelled.'
@@ -48,7 +48,7 @@ class OrderController extends Controller
             'success' => true,
             'newStatus' => 'cancelled',
             'badgeColor' => 'bg-red-600',
-            'message' => 'Your orde has been cancelled.'
+            'message' => 'Your order has been cancelled.'
         ]);
 
     }

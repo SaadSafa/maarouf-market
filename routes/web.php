@@ -21,12 +21,14 @@ Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.s
 Route::middleware(['auth'])->group(function () {
 
     //Cart Count by ajax
-    Route::get('/cart/count', function () {
+    /*Route::get('/cart/count', function () {
         
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
         return response()->json($cart->items()->count());
-    })->name('cart.count');
+    })->name('cart.count');*/
+
+    Route::get('/cart/count,', [CartController::class, 'count'])->name('cart.count');
 
     //Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

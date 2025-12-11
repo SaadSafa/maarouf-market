@@ -5,7 +5,7 @@
 
     {{-- Product Image --}}
     <a href="{{ route('product.show', $product->id) }}" class="relative block">
-        <div class="aspect-[4/5] bg-slate-50 overflow-hidden">
+        <div class="aspect-[1.2] bg-slate-100 overflow-hidden">
             <img 
                 src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/400x400?text=Product' }}"
                 alt="{{ $product->name }}"
@@ -32,26 +32,27 @@
 
         {{-- Unit --}}
         @if(!empty($product->unit))
-            <p class="text-[11px] text-slate-500 mt-0.5">
+            <p class="text-[10px] text-slate-500 mt-0.5">
                 {{ $product->unit }}
             </p>
         @endif
 
         {{-- Price + Details --}}
-        <div class="mt-2 flex items-center justify-between">
-            <p class="text-[15px] font-extrabold text-green-600">
-                {{ number_format($product->price, 0) }} L.L
+        <div class="mt-1.5 flex items-center justify-between">
+            <p class="text-[14px] font-extrabold text-green-600">
+                {{ number_format($product->price, 0) }}
+                <span class="text-[10px] font-normal">L.L</span>
             </p>
 
             <a href="{{ route('product.show', $product->id) }}"
-               class="text-[11px] text-slate-500 hover:text-green-600 hover:underline">
+               class="text-[10px] text-slate-600 hover:text-green-600 hover:underline ml-1">
                 Details
             </a>
         </div>
 
         {{-- Add to Cart --}}
         <form action="{{ route('cart.add', $product->id) }}" method="POST"
-              class="add-to-cart-form flex items-center gap-2">
+              class="add-to-cart-form flex items-center gap-2 mt-2">
             @csrf
 
             {{-- Quantity Selector --}}
@@ -59,7 +60,7 @@
 
                 <button type="button"
                         onclick="let input=this.nextElementSibling; if(input.value>1) input.stepDown();"
-                        class="px-3 py-1.5 text-slate-700 hover:bg-slate-100 transition text-xs font-bold">
+                        class="px-2.5 py-1 text-slate-700 hover:bg-slate-200 transition text-[11px] font-bold">
                     −
                 </button>
 
@@ -67,12 +68,12 @@
                        name="quantity"
                        min="1"
                        value="1"
-                       class="w-10 text-center text-sm font-semibold border-x border-slate-200 focus:outline-none
+                       class="w-8 text-center text-[12px] font-semibold border-x border-slate-200
                               [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
 
                 <button type="button"
                         onclick="this.previousElementSibling.stepUp();"
-                        class="px-3 py-1.5 text-slate-700 hover:bg-slate-100 transition text-xs font-bold">
+                        class="px-2.5 py-1 text-slate-700 hover:bg-slate-100 transition text-[11px] font-bold">
                     +
                 </button>
 
@@ -80,8 +81,8 @@
 
             {{-- Add Button --}}
             <button type="submit"
-                    class="flex-1 text-xs font-semibold bg-green-600 hover:bg-green-700 text-white 
-                           rounded-full py-2 shadow-md hover:shadow-lg transition">
+                    class="flex-1 text-[11px] font-semibold bg-green-600 hover:bg-green-700 text-white 
+                           rounded-full py-1.5 shadow-md hover:shadow-lg transition">
                 Add
             </button>
         </form>

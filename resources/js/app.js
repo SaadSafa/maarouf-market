@@ -6,8 +6,12 @@ import './cart-count';
 import './order-cancel';
 import './toast';
 
+import '../js/admin/order-show.js';
+import '../js/admin/product-status.js'
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
+
+
 
 Alpine.start();
