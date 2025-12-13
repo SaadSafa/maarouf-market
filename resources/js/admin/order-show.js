@@ -169,7 +169,7 @@ updateOrderBadge();
     ======================= */
     window.addItem = function(orderId) {
 
-        let productId = document.getElementById('addProduct').value;
+        let productId = document.getElementById('productId').value;
         let qty = document.getElementById('addQty').value;
 
         fetch(`/admin/orders/${orderId}/items/add`, {

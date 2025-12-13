@@ -3,11 +3,11 @@
 @section('title', 'Orders')
 
 @section('content')
-  <script>
+  <!-- <script>
     setInterval(() => {
         location.reload();
     }, 5000);
-</script>
+</script> -->
 <div class="space-y-6">
 
     <!-- Header -->
