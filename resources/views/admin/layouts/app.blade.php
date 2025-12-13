@@ -23,9 +23,9 @@
 
         {{-- TOPBAR --}}
         <div class="fixed top-0 right-0 
-                    lg:left-30     {{-- desktop offset --}}
+                    lg:left-72     {{-- desktop offset --}}
                     left-0         {{-- mobile full width --}}
-                    h-20 z-40 bg-white shadow">
+                    h-15 z-40 bg-white shadow">
             @include('admin.partials.topbar')
         </div>
 

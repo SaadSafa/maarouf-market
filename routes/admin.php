@@ -36,6 +36,8 @@ Route::post('products/{product}/update-status', [AdminProductController::class,'
 
     Route::resource('orders', AdminOrderController::class)
         ->names('admin.orders');
+        
+    Route::get('/orders-refresh',[AdminOrderController::class,'refreshOrder'])->name('admin.orders.refresh');;
 
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
         ->name('admin.orders.updateStatus');

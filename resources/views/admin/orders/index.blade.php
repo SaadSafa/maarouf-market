@@ -3,11 +3,9 @@
 @section('title', 'Orders')
 
 @section('content')
-  <!-- <script>
-    setInterval(() => {
-        location.reload();
-    }, 5000);
-</script> -->
+<script>
+    const tab = "{{ $tab }}";
+</script>
 <div class="space-y-6">
 
     <!-- Header -->
@@ -100,14 +98,14 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="orders-data">
                     @forelse($orders as $order)
                         <tr class="border-b hover:bg-slate-50">
                             <td class="py-3 px-4">{{ $order->id }}</td>
                             <td class="py-3 px-4">{{ $order->manager_notes ?? '-' }}</td>
                             <td class="py-3 px-4">{{ $order->customer_name }}</td>
                             <td class="py-3 px-4">
-    @if ($tab != 'history')  
+    @if ($tab != 'history')
     <select id="orderStatus" class="status-select px-2 py-1 border rounded text-xs"
             data-id="{{ $order->id }}">
         @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
@@ -136,7 +134,6 @@
                             <td class="py-3 px-4">{{ ($order->created_at)->addMinutes(35) }}</td>
                             <td class="py-3 px-4">{{ $order->area ?? '-' }}</td>
                             <td class="py-3 px-4">-</td>
-
                             <td class="py-3 px-4 text-right">
                                 <a href="{{ route('admin.orders.show', $order) }}"
                                    class="text-emerald-600 text-sm">
