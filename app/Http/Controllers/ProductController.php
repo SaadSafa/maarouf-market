@@ -10,7 +10,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::where('id', $id)
-                          ->where('is_active', 1)
+                          //->where('is_active', 1) //show a sold out badge instead of hiding the product
                           ->firstOrFail();
 
         // Related products from same cateogry

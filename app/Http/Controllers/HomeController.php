@@ -31,7 +31,9 @@ class HomeController extends Controller
         $sliders = OfferSlider::where('is_active', 1)->get();
 
         // Product query
-        $query = Product::where('is_active', 1);
+        //$query = Product::where('is_active', 1);
+        //change query to get all products adding sold out badge
+        $query = Product::query();
 
         // Filter by category
         if ($categoryId) {
@@ -46,8 +48,13 @@ class HomeController extends Controller
             });
         }
 
-        // Pagination
-        $products = $query->latest()->paginate(10);
+        // Pagination order by active products
+        //$products = $query->latest()->paginate(10);
+        $query->orderBy('is_active', 'desc')
+                ->orderBy('id', 'desc');
+
+        $products = $query->paginate(10);
+
 
         return view('frontend.home', compact(
             'products',

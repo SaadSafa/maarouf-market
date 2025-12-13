@@ -44,4 +44,9 @@ class Product extends Model
         : 0;
         return $change;
     }
+
+    //for sold out badge
+    public function getIsSoldOutAttribute(){
+        return $this->is_active == 0;
+    }
 }
