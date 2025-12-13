@@ -15,6 +15,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Manage products
+Route::get('/search-products', [AdminProductController::class, 'search_for_orders']);
+
 Route::get('/products/search', [AdminProductController::class, 'Search'])->name('admin.products.search');
 
 Route::post('products/{product}/update-status', [AdminProductController::class,'updateStatus'])

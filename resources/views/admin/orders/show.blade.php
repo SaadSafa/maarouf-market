@@ -107,13 +107,14 @@
             <h3 class="text-lg font-bold mb-3">Add Product</h3>
 
             <div class="flex gap-3">
-                <select id="addProduct" class="border rounded-xl px-3 py-2 w-full">
-                    @foreach(\App\Models\Product::orderBy('name')->get() as $prod)
-                        <option value="{{ $prod->id }}">
-                            {{ $prod->name }} ({{ number_format($prod->price) }} LBP)
-                        </option> 
-                    @endforeach
-                </select>
+                <input type="text" id="productSearch" 
+                class="border rounded-xl px-3 py-2 w-full"
+                placeholder="Search product...">
+
+            <div id="searchResults"
+                class="border rounded-xl mt-10 bg-white hidden absolute w-full z-50"></div>
+
+            <input type="hidden" id="productId">
 
                 <input id="addQty" type="number" min="1" value="1"
                        class="w-20 border rounded-xl px-3 py-2">
@@ -191,7 +192,7 @@
     </div>
 
 </div>
-<script>
+<!-- <script>
 function updateCartUI(items) {
     let html = '';
     let total = 0;
@@ -281,7 +282,7 @@ function deleteItem(id) {
 
 function addItem(orderId) {
 
-    const productId = document.getElementById('addProduct').value;
+    const productId = document.getElementById('productId').value;
     const qty = document.getElementById('addQty').value;
 
     console.log("Adding item...");
@@ -368,4 +369,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
 @endsection
 
-
+ -->

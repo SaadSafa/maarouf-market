@@ -171,4 +171,14 @@ public function Search(Request $request)
     return view('admin.products.index', compact('products'));
 }
 
+public function search_for_orders(Request $request)
+{
+    $term = $request->q;
+
+    return Product::where('name', 'LIKE', "%$term%")
+        ->orderBy('name')
+        ->take(10)
+        ->get();
+}
+
 }
