@@ -66,6 +66,27 @@ class AdminOrderController extends Controller
         return view('admin.orders.index', compact('orders', 'tab'));
     }
 
+    //----------------------------
+    //order-refresh
+    //----------------------------
+
+    public function refreshOrder(Request $request)
+{
+    if ($request->tab === 'history') {
+        // HISTORY = completed + cancelled
+        $orders = Order::whereIn('status', ['completed', 'cancelled'])->get();
+    } else {
+        // NORMAL = everything else
+        $orders = Order::whereNotIn('status', ['completed', 'cancelled'])->get();
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $orders
+    ]);
+}
+
+
 
     // ---------------------------
     // VIEW ORDER PAGE

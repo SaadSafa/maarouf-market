@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     console.log("Order Show JS Loaded!");
-
-
-
     
 //to update the badge of order in sidebar
 async function updateOrderBadge() {
@@ -46,32 +43,29 @@ updateOrderBadge();
     /* =======================
        STATUS CHANGE
     ======================= */
-    const select = document.getElementById('orderStatus');
+    document.addEventListener('change', function (e) {
+    if (!e.target.classList.contains('status-select')) return;
 
-    if (select) {
-        console.log("OrderStatus found:", select);
+    let select = e.target;
+    let status = select.value;
+    let orderId = select.dataset.id;
 
-        select.addEventListener('change', function () {
-            let status = this.value;
-            let orderId = this.dataset.id;
+    console.log("Updating:", orderId, status);
 
-            console.log("Updating:", orderId, status);
-
-            fetch(`/admin/orders/${orderId}/status`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": window.csrf
-                },
-                body: JSON.stringify({ status })
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log("Status updated:", data);
-            })
-            .catch(err => console.error(err));
-        });
-    }
+    fetch(`/admin/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": window.csrf
+        },
+        body: JSON.stringify({ status })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Status updated:", data);
+    })
+    .catch(err => console.error(err));
+});
 
     /* =======================
        UPDATE CART UI
