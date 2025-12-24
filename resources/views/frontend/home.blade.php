@@ -68,8 +68,9 @@
             <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
 
                 @foreach($categories as $category)
-                    <a href="{{ url('/?category=' . $category->id) }}"
-                       class="group flex flex-col items-center bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:border-green-500">
+                    <a href="#"
+                       class="category-filter group flex flex-col items-center bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:border-green-500"
+                       data-category="{{ $category->id }}">
 
                         {{-- Category Image --}}
                         @if($category->image)
@@ -100,7 +101,7 @@
     {{-- ============================= --}}
     {{-- Products Listing --}}
     {{-- ============================= --}}
-    <section class="mt-1 mb-6">
+    <section class="mt-1 mb-6" id="products-container">
 
         <div class="flex items-baseline justify-between mb-2">
             <h2 class="text-sm font-semibold text-slate-900">
@@ -118,23 +119,9 @@
             </p>
         </div>
 
+        {{-- ajax load --}}
+        @include('partials.products-grid',['products' => $products])
 
-        @if($products->count())
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                @foreach($products as $product)
-                    <x-product-card :product="$product" />
-                @endforeach
-            </div>
-
-            {{-- Pagination --}}
-            <div class="mt-4">
-                {{ $products->links() }}
-            </div>
-        @else
-            <p class="text-sm text-slate-500">
-                No products found.
-            </p>
-        @endif
 
     </section>
 

@@ -5,6 +5,7 @@ import './cart-add';
 import './cart-count';
 import './order-cancel';
 import './toast';
+import './category-product-ajax.js';
 
 import '../js/admin/order-show.js';
 import '../js/admin/product-status.js';

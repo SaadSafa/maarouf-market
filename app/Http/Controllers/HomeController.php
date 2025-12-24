@@ -64,4 +64,28 @@ class HomeController extends Controller
             'categoryId'
         ));
     }
+
+    //category ajax product
+    public function ajaxProducts(Request $request)
+    {
+        $categoryId = $request->input('category');
+        $search = $request->input('search');
+
+        $query = Product::query();
+
+        if($categoryId){
+            $query->where('category_id', $categoryId);
+        }
+
+        if($search){
+            $query->where('name', 'like', "%$search%");
+        }
+
+        $query->orderBy('is_active', 'desc')
+                ->orderBy('id', 'desc');
+
+        $products = $query->paginate(10);
+
+        return view('partials.products-grid', compact('products'))->render();
+    }
 }

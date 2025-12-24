@@ -13,7 +13,8 @@
 
             @foreach($items as $item)
                 @php
-                    $lineTotal = $item->quantity * $item->product->price;
+                    $unitPrice = $item->price_at_time ?? $item->product->price;
+                    $lineTotal = $item->quantity * $unitPrice;
                     $total += $lineTotal;
                 @endphp
 
@@ -22,7 +23,7 @@
                     class="cart-item bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row sm:items-center gap-4"
                     id="cart-item-{{ $item->id }}"
                     data-id="{{ $item->id }}"
-                    data-price="{{ $item->product->price }}"
+                    data-price="{{ $unitPrice }}"
                 >
 
                     {{-- IMAGE --}}
@@ -41,7 +42,7 @@
 
                         {{-- Price --}}
                         <p class="text-xs text-gray-500 mt-1">
-                            {{ number_format($item->product->price, 0) }} LBP each
+                            {{ number_format($unitPrice, 0) }} LBP each
                         </p>
 
                         {{-- Quantity Controls --}}

@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function refreshCartCount() {
         fetch('/cart/count')
             .then(res => res.json())
-            .then(count => {
+            .then(data => {
+                const count = data.cartCount ?? 0;
                 badge.innerText = count;
 
                 if (count > 0) {
