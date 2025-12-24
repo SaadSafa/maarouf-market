@@ -12,6 +12,11 @@ class CheckoutController extends Controller
 {
     public function index()
     {
+        if (! Auth::user()->hasVerifiedEmail()) {
+    return redirect()->route('verification.notice')
+        ->with('warning', 'Please verify your email before checkout.');
+}
+
         $cart = Cart::where('user_id', Auth::id())
                     ->with('items.product')
                     ->first();

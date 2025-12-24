@@ -1,55 +1,136 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-900 to-green-800 px-4">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+    <div class="w-full max-w-6xl min-h-[560px] bg-white rounded-2xl shadow-2xl overflow-hidden
+        grid grid-cols-1 lg:grid-cols-2">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <!-- LEFT PANEL -->
+        <div class="hidden lg:flex flex-col justify-center
+            bg-gradient-to-br from-green-700 to-emerald-800
+            text-white px-16">
+
+            <h1 class="text-4xl font-bold tracking-wide mb-4">
+                Maarouf Market
+            </h1>
+
+            <p class="text-lg opacity-90 mb-12 max-w-md">
+                Sign in to shop your daily essentials easily and securely.
+            </p>
+
+            <ul class="space-y-4 text-base opacity-95">
+                <li>✓ Browse fresh products & groceries</li>
+                <li>✓ Add items to your cart and checkout</li>
+                <li>✓ Track your orders and purchases</li>
+            </ul>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <!-- RIGHT PANEL -->
+        <div class="flex items-center justify-center px-6 sm:px-10 lg:px-16">
+            <div class="w-full max-w-sm">
 
-            <x-text-input id="password" class="block mt-1 w-full"
+                <!-- MOBILE HEADER -->
+                <div class="lg:hidden text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800">
+                        Maarouf Market
+                    </h1>
+                    <p class="text-sm text-gray-500">
+                        Shop your daily essentials
+                    </p>
+                </div>
+
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                    Customer Login
+                </h2>
+
+                <p class="text-sm text-gray-500 mb-6">
+                    Login to your account to start shopping
+                </p>
+
+                <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                    @csrf
+
+                    <!-- EMAIL -->
+                    <div>
+                        <x-input-label for="email" value="Email Address" />
+                        <x-text-input
+                            id="email"
+                            class="block mt-1 w-full rounded-lg border-gray-300 bg-gray-50
+                            focus:bg-white focus:border-green-600 focus:ring-green-600 transition"
+                            type="email"
+                            name="email"
+                            :value="old('email')"
+                            required
+                            autofocus
+                            autocomplete="username"
+                            placeholder="you@example.com"
+                        />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div>
+                        <x-input-label for="password" value="Password" />
+                        <x-text-input
+                            id="password"
+                            class="block mt-1 w-full rounded-lg border-gray-300 bg-gray-50
+                            focus:bg-white focus:border-green-600 focus:ring-green-600 transition"
                             type="password"
                             name="password"
-                            required autocomplete="current-password" />
+                            required
+                            autocomplete="current-password"
+                            placeholder="••••••••"
+                        />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <!-- OPTIONS -->
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                class="rounded border-gray-300 text-green-600 focus:ring-green-600"
+                            >
+                            <span class="ms-2 text-gray-600">
+                                Remember me
+                            </span>
+                        </label>
+
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}"
+                               class="text-green-600 hover:underline">
+                                Forgot password?
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- LOGIN BUTTON -->
+                    <button
+                        type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700
+                        text-white font-semibold py-3 rounded-lg
+                        transition shadow-md tracking-wide">
+                        Login & Start Shopping
+                    </button>
+                </form>
+
+                <!-- REGISTER -->
+                @if (Route::has('register'))
+                    <div class="mt-6 text-sm text-center text-gray-600">
+                        New customer?
+                        <a href="{{ route('register') }}"
+                           class="text-green-600 font-medium hover:underline">
+                            Create an account
+                        </a>
+                    </div>
+                @endif
+
+            </div>
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-
-        <!-- If missing → add it -->
-        @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="text-sm text-gray-600 hover:underline">
-                Don't have an account? Register here
-            </a>
-        @endif
-
-    </form>
+</div>
 </x-guest-layout>

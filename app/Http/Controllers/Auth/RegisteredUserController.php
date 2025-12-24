@@ -27,30 +27,32 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
 
-        event(new Registered($user));
+    // 🔔 Send verification email
+    event(new Registered($user));
 
-        Auth::login($user);
-        
-        // If admin registers, send to admin dashboard
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
+    // 🔐 Login user
+    Auth::login($user);
 
-        // Otherwise customer → homepage
-        return redirect()->route('home');
-            }
+    // 🛡 Admin logic stays the same
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    // ✅ CUSTOMER → force email verification page
+    return redirect()->route('verification.notice');
+}
 }
