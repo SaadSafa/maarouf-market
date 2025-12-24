@@ -29,7 +29,6 @@
             <h3 class="font-semibold text-slate-900 mb-3">Quick Links</h3>
             <ul class="space-y-2">
                 <li><a href="{{ route('home') }}" class="hover:text-green-600">Home</a></li>
-                <li><a href="#categories" class="hover:text-green-600">Categories</a></li>
 
                 @auth
                     <li><a href="{{ route('orders.index') }}" class="hover:text-green-600">My Orders</a></li>

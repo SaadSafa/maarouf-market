@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+        $cart = $this->activeCart($request);
         $items = $cart->items()->with('product')->get();
 
         return view('frontend.cart', compact('cart', 'items'));
@@ -27,7 +27,7 @@ class CartController extends Controller
         $product = Product::findOrFail($id);
         $quantity = $validated['quantity'] ?? 1;
 
-        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+        $cart = $this->activeCart($request);
 
         // if already exists the update qty
         $item = CartItem::where('cart_id', $cart->id)
@@ -58,7 +58,7 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $item = $this->findUserCartItem($id);
+        $item = $this->findCartItem($request, $id);
         $item->quantity = $validated['quantity'];
         $item->save();
 
@@ -67,36 +67,81 @@ class CartController extends Controller
         ]);
     }
 
-    public function remove($id)
+    public function remove(Request $request, $id)
     {
-        $item = $this->findUserCartItem($id);
+        $item = $this->findCartItem($request, $id);
         $item->delete();
 
         //return updated cart count
-        $cart = Cart::where('user_id', Auth::id())->first();
+        $cart = $this->activeCart($request);
         $newCount = $cart ? $cart->items()->count() : 0;
 
         return response()->json(['success' => true, 'cartCount' => $newCount]);
     }
 
     //function for updating the cart count badge
-    public function count()
+    public function count(Request $request)
     {
-        $cart = Cart::where('user_id', Auth::id())
-                    ->withCount('items')
-                    ->first();
+        $cart = $this->activeCart($request)->loadCount('items');
 
         return response()->json([
-            'cartCount' => $cart?->items_count ?? 0,
+            'cartCount' => $cart->items_count ?? 0,
         ]);
     }
 
-    private function findUserCartItem($id): CartItem
+    private function findCartItem(Request $request, $id): CartItem
     {
-        return CartItem::where('id', $id)
-            ->whereHas('cart', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
-            ->firstOrFail();
+        $cart = $this->activeCart($request);
+
+        return $cart->items()->where('id', $id)->firstOrFail();
+    }
+
+    private function activeCart(Request $request): Cart
+    {
+        $sessionId = $request->session()->getId();
+
+        if (Auth::check()) {
+            $userCart = Cart::where('user_id', Auth::id())->first();
+            $sessionCart = Cart::where('session_id', $sessionId)->first();
+
+            if ($userCart && $sessionCart && $userCart->id !== $sessionCart->id) {
+                // Merge session cart into user cart
+                foreach ($sessionCart->items as $sessionItem) {
+                    $existing = $userCart->items()
+                        ->where('product_id', $sessionItem->product_id)
+                        ->first();
+
+                    if ($existing) {
+                        $existing->quantity += $sessionItem->quantity;
+                        $existing->save();
+                    } else {
+                        $sessionItem->cart_id = $userCart->id;
+                        $sessionItem->save();
+                    }
+                }
+
+                $sessionCart->delete();
+            } elseif (!$userCart && $sessionCart) {
+                // Reuse guest cart for logged-in user
+                $sessionCart->user_id = Auth::id();
+                $sessionCart->save();
+                $userCart = $sessionCart;
+            }
+
+            if ($userCart) {
+                if (!$userCart->session_id) {
+                    $userCart->session_id = $sessionId;
+                    $userCart->save();
+                }
+                return $userCart;
+            }
+
+            return Cart::create([
+                'user_id' => Auth::id(),
+                'session_id' => $sessionId,
+            ]);
+        }
+
+        return Cart::firstOrCreate(['session_id' => $sessionId]);
     }
 }

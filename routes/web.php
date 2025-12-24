@@ -17,29 +17,23 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Product details
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
+// Public AJAX routes
+Route::get('/ajax/products', [HomeController::class, 'ajaxProducts'])->name("ajax.products");
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+
+// Cart (guests and logged-in)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
 // Logged-in user routes
 Route::middleware(['auth'])->group(function () {
 
-    //Cart Count by ajax
-    /*Route::get('/cart/count', function () {
-        
-        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-
-        return response()->json($cart->items()->count());
-    })->name('cart.count');*/
-
-    Route::get('/cart/count,', [CartController::class, 'count'])->name('cart.count');
-
-    //Profile
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Cart
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

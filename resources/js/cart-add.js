@@ -1,33 +1,26 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Use event delegation so forms injected via AJAX also get handled.
+document.addEventListener('submit', async (event) => {
+    const form = event.target.closest('.add-to-cart-form');
+    if (!form) return;
 
-    // Handle Add to Cart AJAX
-    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+    event.preventDefault();
 
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault(); // Prevent full reload
-
-            const url = this.action;
-            const formData = new FormData(this);
-
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    updateCartCount(result.cartCount);
-                    showToast("Item added to cart");
-                }
-
-            } catch (err) {
-                console.error("Add to cart error:", err);
-            }
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
-    });
 
+        const result = await response.json();
+
+        if (result.success) {
+            updateCartCount(result.cartCount);
+            showToast("Item added to cart");
+        }
+    } catch (err) {
+        console.error('Add to cart error:', err);
+    }
 });
 
 // Update cart badge count

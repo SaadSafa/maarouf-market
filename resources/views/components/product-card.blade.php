@@ -73,9 +73,17 @@
 
         @else
 
+            @php
+                $currentCategory = request('category');
+            @endphp
+
             <form action="{{ route('cart.add', $product->id) }}" method="POST"
                 class="add-to-cart-form flex items-center gap-2 mt-2">
                 @csrf
+
+                @if ($currentCategory)
+                    <input type="hidden" name="category" value="{{ $currentCategory }}">
+                @endif
 
                 {{-- Quantity Selector --}}
                 <div class="flex items-center rounded-full border border-slate-300 bg-white overflow-hidden">
