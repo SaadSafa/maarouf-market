@@ -20,7 +20,18 @@
         {{-- Page Content --}}
         <main class="flex-1 pt-[110px] sm:pt-16 pb-[60px] sm:pb-0">
             <div class="max-w-6xl mx-auto px-3 sm:px-4 lg:px-0">
-                @yield('content')
+                {{-- Support both Blade layouts (@yield) and Blade components ({{$slot}}) --}}
+                @isset($header)
+                    <header class="mb-4">
+                        {{ $header }}
+                    </header>
+                @endisset
+
+                @isset($slot)
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endisset
             </div>
         </main>
 
