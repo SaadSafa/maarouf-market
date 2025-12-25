@@ -2,6 +2,10 @@
 
 @section('title', "Order #{$order->id}")
 
+@php
+    $isCompleted = $order->status === 'completed';
+@endphp
+
 @section('content')
 
 <div class="space-y-8">
@@ -17,8 +21,10 @@
         <div>
             <label class="text-sm text-slate-600">Status:</label>
             <select id="orderStatus"
-                    data-id="{{ $order->id }}"
-                    class="px-3 py-2 border rounded-xl text-sm">
+        data-id="{{ $order->id }}"
+        class="px-3 py-2 border rounded-xl text-sm
+               {{ $isCompleted ? 'bg-slate-100 cursor-not-allowed opacity-70' : '' }}"
+        {{ $isCompleted ? 'disabled' : '' }}>
                 @foreach(['pending','placed','picking','picked','indelivery','completed','cancelled'] as $st)
                     <option value="{{ $st }}" {{ $order->status == $st ? 'selected' : '' }}>
                         {{ ucfirst($st) }}
@@ -70,12 +76,14 @@
                             <td class="py-3 px-4 text-center">
                                 <div class="flex justify-center items-center gap-2">
                                     <button onclick="updateQty({{ $item->id }}, -1)"
-                                            class="px-2 py-1 bg-slate-200 rounded">-</button>
+                                            class="px-2 py-1 bg-slate-200 rounded   {{ $isCompleted ? 'opacity-50 cursor-not-allowed' : '' }}"
+        {{ $isCompleted ? 'disabled' : '' }}>-</button>
 
                                     <span id="qty-{{ $item->id }}">{{ $item->quantity }}</span>
 
                                     <button onclick="updateQty({{ $item->id }}, 1)"
-                                            class="px-2 py-1 bg-slate-200 rounded">+</button>
+                                            class="px-2 py-1 bg-slate-200 rounded   {{ $isCompleted ? 'opacity-50 cursor-not-allowed' : '' }}"
+        {{ $isCompleted ? 'disabled' : '' }}>+</button>
                                 </div>
                             </td>
 
@@ -88,7 +96,8 @@
                             <!-- DELETE -->
                             <td class="py-3 px-4 text-right">
                                 <button onclick="deleteItem({{ $item->id }})"
-                                        class="text-red-600 font-semibold">Remove</button>
+                                        class="text-red-600 font-semibold   {{ $isCompleted ? 'opacity-50 cursor-not-allowed' : '' }}"
+        {{ $isCompleted ? 'disabled' : '' }}>Remove</button>
                             </td>
 
                         </tr>
@@ -121,7 +130,8 @@
                        class="w-20 border rounded-xl px-3 py-2">
 
                 <button onclick="addItem({{ $order->id }})"
-                        class="bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700">
+                        class="bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700   {{ $isCompleted ? 'opacity-50 cursor-not-allowed' : '' }}"
+        {{ $isCompleted ? 'disabled' : '' }}>
                     Add
                 </button>
             </div>
