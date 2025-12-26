@@ -62,7 +62,7 @@
                             <label class="text-sm font-medium text-slate-700">SKU</label>
                             <input 
                                 type="text" 
-                                name="sku"
+                                name="barcode"
                                 class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-emerald-500">
                         </div>
 

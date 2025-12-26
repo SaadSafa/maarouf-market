@@ -18,6 +18,7 @@ class Product extends Model
         'stock',
         'image',
         'is_active',
+        'barcode',
     ];
 
     public function category()
