@@ -5,6 +5,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // If the home page does not include #products-container, stop.
     if (!productContainer) return;
 
+    const loadProducts = (url) => {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                productContainer.innerHTML = html;
+            })
+            .catch(err => console.error(err));
+    };
+
     // Handle category clicks
     document.querySelectorAll(".category-filter").forEach(button => {
         button.addEventListener("click", function (e) {
@@ -12,13 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const categoryId = this.dataset.category;
 
-            fetch(`/ajax/products?category=${categoryId}`)
-                .then(response => response.text())
-                .then(html => {
-                    productContainer.innerHTML = html;
-                })
-                .catch(err => console.error(err));
+            loadProducts(`/ajax/products?category=${categoryId}`);
         });
+    });
+
+    // Handle pagination links inside the injected fragment via delegation
+    productContainer.addEventListener("click", (e) => {
+        const link = e.target.closest("nav[role='navigation'] a, .pagination a");
+        if (!link) return;
+
+        e.preventDefault();
+        loadProducts(link.href);
     });
 
 });

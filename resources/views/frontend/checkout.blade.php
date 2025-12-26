@@ -130,53 +130,53 @@
 
             <div class="bg-white rounded-2xl shadow-sm p-4">
 
-                <h2 class="text-sm font-bold text-gray-800 mb-3">Order Summary</h2>
+                <h2 class="text-sm font-bold text-slate-900 mb-4">
+                    Order Summary
+                </h2>
 
                 @php $total = 0; @endphp
 
-                @foreach($cart->items as $item)
+                <div class="space-y-3">
+                    @foreach($cart->items as $item)
 
-                    @php
+                        @php
+                            $lineTotal = $item->quantity * $item->product->price;
+                            $total += $lineTotal;
+                        @endphp
 
-                        $lineTotal = $item->quantity * $item->product->price;
+                        <div class="flex justify-between items-start text-sm">
+                            <div class="flex-1 pr-2">
+                                <p class="text-slate-800 font-medium leading-snug">
+                                    {{ $item->product->name }}
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    {{ $item->quantity }} × {{ number_format($item->product->price, 0) }} LBP
+                                </p>
+                            </div>
 
-                        $total += $lineTotal;
+                            <span class="font-semibold text-slate-900 whitespace-nowrap">
+                                {{ number_format($lineTotal, 0) }} LBP
+                            </span>
+                        </div>
 
-                    @endphp
+                        <div class="border-t border-slate-100"></div>
 
-                    <div class="flex justify-between text-sm mb-1">
+                    @endforeach
+                </div>
 
-                        <span class="text-gray-700">
-
-                            {{ $item->product->name }} &times; {{ $item->quantity }}
-
-                        </span>
-
-                        <span class="font-semibold">
-
-                            {{ number_format($lineTotal, 0) }} LBP
-
-                        </span>
-
-                    </div>
-
-                @endforeach
-
-                <hr class="my-3">
-
-                <div class="flex justify-between text-sm font-bold">
-
-                    <span>Total</span>
-
-                    <span class="text-green-600 text-lg">
-
-                        {{ number_format($total, 0) }} LBP
-
+                {{-- Total --}}
+                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-200">
+                    <span class="text-sm font-semibold text-slate-800">
+                        Total
                     </span>
 
+                    <span class="text-lg font-extrabold text-green-600">
+                        {{ number_format($total, 0) }} LBP
+                    </span>
                 </div>
 
             </div>
+
 
         </div>
 
