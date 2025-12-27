@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminSliderController;
+use App\Http\Controllers\Admin\AdminSettingController;
 
 // Admin routes (protected
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
@@ -57,6 +58,10 @@ Route::post('products/{product}/update-status', [AdminProductController::class,'
     Route::resource('sliders', AdminSliderController::class)
         ->names('admin.sliders')
         ->parameters(['sliders' => 'offerSlider']);
+
+    // Store toggle
+    Route::post('/settings/store-toggle', [AdminSettingController::class, 'toggleShop'])
+        ->name('admin.settings.store-toggle');
 
 
 });
