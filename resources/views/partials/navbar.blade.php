@@ -2,6 +2,7 @@
     $cartCount = auth()->check() && auth()->user()->cart
         ? auth()->user()->cart->items()->count()
         : 0;
+    $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true;
 @endphp
 
 <nav class="bg-white fixed top-0 inset-x-0 z-50 border-b border-slate-200 shadow-sm">

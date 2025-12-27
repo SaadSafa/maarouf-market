@@ -17,6 +17,23 @@
         {{-- Top Navbar --}}
         @include('partials.navbar')
 
+        {{-- Store closed banner (persistent while closed or when flash is present) --}}
+        @php
+            $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true;
+            $storeClosedFlash = session('store_closed');
+        @endphp
+        @if(!$storeOpen || $storeClosedFlash)
+            <div class="bg-amber-100 border-b border-amber-200 text-amber-800 mt-16">
+                <div class="max-w-6xl mx-auto px-3 sm:px-4 lg:px-0 py-2 text-sm flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-200 text-amber-800 text-xs font-bold">!</span>
+                    <span class="font-semibold">Ordering is currently paused.</span>
+                    <span class="text-amber-900">
+                        {{ $storeClosedFlash ?? 'You can browse products, but checkout is temporarily disabled.' }}
+                    </span>
+                </div>
+            </div>
+        @endif
+
         {{-- Page Content --}}
         <main class="flex-1 pt-[110px] sm:pt-16 pb-[60px] sm:pb-0">
             <div class="max-w-6xl mx-auto px-3 sm:px-4 lg:px-0">

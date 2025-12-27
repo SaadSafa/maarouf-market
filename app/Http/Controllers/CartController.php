@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -99,49 +101,91 @@ class CartController extends Controller
     private function activeCart(Request $request): Cart
     {
         $sessionId = $request->session()->getId();
+        $cartToken = $request->cookie('cart_token');
 
         if (Auth::check()) {
             $userCart = Cart::where('user_id', Auth::id())->first();
             $sessionCart = Cart::where('session_id', $sessionId)->first();
+            $tokenCart = $cartToken
+                ? Cart::where('cart_token', $cartToken)->first()
+                : null;
 
-            if ($userCart && $sessionCart && $userCart->id !== $sessionCart->id) {
-                // Merge session cart into user cart
-                foreach ($sessionCart->items as $sessionItem) {
-                    $existing = $userCart->items()
-                        ->where('product_id', $sessionItem->product_id)
-                        ->first();
-
-                    if ($existing) {
-                        $existing->quantity += $sessionItem->quantity;
-                        $existing->save();
-                    } else {
-                        $sessionItem->cart_id = $userCart->id;
-                        $sessionItem->save();
-                    }
+            // Merge carts into user cart
+            if (!$userCart) {
+                $userCart = $tokenCart ?: $sessionCart;
+                if ($userCart) {
+                    $userCart->user_id = Auth::id();
+                    $userCart->session_id = $sessionId;
+                    $userCart->save();
+                } else {
+                    $userCart = Cart::create([
+                        'user_id' => Auth::id(),
+                        'session_id' => $sessionId,
+                    ]);
                 }
-
-                $sessionCart->delete();
-            } elseif (!$userCart && $sessionCart) {
-                // Reuse guest cart for logged-in user
-                $sessionCart->user_id = Auth::id();
-                $sessionCart->save();
-                $userCart = $sessionCart;
-            }
-
-            if ($userCart) {
-                if (!$userCart->session_id) {
+            } else {
+                // Merge session cart
+                if ($sessionCart && $userCart->id !== $sessionCart->id) {
+                    $this->mergeCarts($sessionCart, $userCart);
+                    $sessionCart->delete();
+                }
+                // Merge token cart
+                if ($tokenCart && $userCart->id !== $tokenCart->id) {
+                    $this->mergeCarts($tokenCart, $userCart);
+                    $tokenCart->delete();
+                }
+                // Ensure session id is current
+                if ($userCart->session_id !== $sessionId) {
                     $userCart->session_id = $sessionId;
                     $userCart->save();
                 }
-                return $userCart;
             }
 
-            return Cart::create([
-                'user_id' => Auth::id(),
-                'session_id' => $sessionId,
-            ]);
+            // Clear guest cart token cookie after merge
+            Cookie::queue(Cookie::forget('cart_token'));
+
+            return $userCart;
         }
 
-        return Cart::firstOrCreate(['session_id' => $sessionId]);
+        // Guest: use cart_token first, then session_id
+        $cart = null;
+        if ($cartToken) {
+            $cart = Cart::where('cart_token', $cartToken)->first();
+        }
+        if (!$cart) {
+            $cart = Cart::where('session_id', $sessionId)->first();
+        }
+
+        if (!$cart) {
+            $cart = Cart::create([
+                'session_id' => $sessionId,
+                'cart_token' => Str::uuid()->toString(),
+            ]);
+        } elseif (!$cart->cart_token) {
+            $cart->cart_token = Str::uuid()->toString();
+            $cart->save();
+        }
+
+        // Keep cart token in cookie so cart survives session regeneration
+        Cookie::queue(cookie()->forever('cart_token', $cart->cart_token));
+
+        return $cart;
+    }
+
+    private function mergeCarts(Cart $from, Cart $into): void
+    {
+        foreach ($from->items as $sessionItem) {
+            $existing = $into->items()
+                ->where('product_id', $sessionItem->product_id)
+                ->first();
+
+            if ($existing) {
+                $existing->quantity += $sessionItem->quantity;
+                $existing->save();
+            } else {
+                $sessionItem->cart_id = $into->id;
+                $sessionItem->save();
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\EnsureShopEnabled;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'auth' => Authenticate::class,
         'guest' => RedirectIfAuthenticated::class,
         'admin' => AdminMiddleware::class,
+        'shop.open' => EnsureShopEnabled::class,
     ]);
 })
 

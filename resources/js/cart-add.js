@@ -12,6 +12,12 @@ document.addEventListener('submit', async (event) => {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
 
+        if (response.status === 423) {
+            const data = await response.json().catch(() => ({}));
+            showToast(data.message || 'Ordering is currently paused.');
+            return;
+        }
+
         const result = await response.json();
 
         if (result.success) {
