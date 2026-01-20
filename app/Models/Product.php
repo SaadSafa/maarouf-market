@@ -46,6 +46,15 @@ class Product extends Model
         return $change;
     }
 
+    public function getEffectivePriceAttribute()
+    {
+        if ($this->discount_price !== null && $this->discount_price < $this->price) {
+            return $this->discount_price;
+        }
+
+        return $this->price;
+    }
+
     //for sold out badge
     public function getIsSoldOutAttribute(){
         return $this->is_active == 0;

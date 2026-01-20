@@ -44,7 +44,7 @@ class CartController extends Controller
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
                 'quantity' => $quantity,
-                'price_at_time' => $product->price,
+                'price_at_time' => $product->effective_price,
             ]);
         }
 
