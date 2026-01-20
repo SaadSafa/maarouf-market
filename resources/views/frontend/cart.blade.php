@@ -13,7 +13,7 @@
 
             @foreach($items as $item)
                 @php
-                    $unitPrice = $item->price_at_time ?? $item->product->price;
+                    $unitPrice = $item->price_at_time ?? $item->product->effective_price;
                     $lineTotal = $item->quantity * $unitPrice;
                     $total += $lineTotal;
                 @endphp

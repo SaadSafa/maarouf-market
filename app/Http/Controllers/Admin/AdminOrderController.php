@@ -134,12 +134,26 @@ public function addItem(Request $request, Order $order)
         ]);
 
         $product = Product::findOrFail($request->product_id);
+        $quantity = (int) $request->quantity;
+
+        if ($product->stock !== null && $product->stock < $quantity) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Insufficient stock for this product.'
+            ], 422);
+        }
 
         $item = $order->items()->create([
             'product_id'    => $product->id,
-            'quantity'      => $request->quantity,
-            'price' => $product->price,    // FIXED HERE
+            'quantity'      => $quantity,
+            'price' => $product->effective_price,
         ]);
+
+        if ($product->stock !== null) {
+            $product->decrement('stock', $quantity);
+        }
+
+        $this->updateOrderTotal($order);
 
         return response()->json([
             'success' => true,
@@ -173,13 +187,35 @@ public function addItem(Request $request, Order $order)
                 'quantity' => ['required', 'integer', 'min:1'],
             ]);
 
+            $quantity = (int) $validated['quantity'];
+            $currentQuantity = (int) $item->quantity;
+            $delta = $quantity - $currentQuantity;
+            $product = $item->product()->first();
+
+            if ($product && $delta > 0 && $product->stock !== null && $product->stock < $delta) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Insufficient stock for this product.'
+                ], 422);
+            }
+
             \Log::info('ORDER ITEM UPDATE', [
                 'order_id' => $item->order_id,
                 'product_id' => $item->product_id,
                 'request' => $request->all(),
             ]);
 
-            $item->update(['quantity' => $validated['quantity']]);
+            $item->update(['quantity' => $quantity]);
+
+            if ($product && $product->stock !== null && $delta !== 0) {
+                if ($delta > 0) {
+                    $product->decrement('stock', $delta);
+                } else {
+                    $product->increment('stock', abs($delta));
+                }
+            }
+
+            $this->updateOrderTotal($item->order);
 
             return response()->json([
                 'items' => $item->order->items()->with('product')->get(),
@@ -202,8 +238,15 @@ public function addItem(Request $request, Order $order)
 public function deleteItem(OrderItem $item) {
 
     $order = $item->order;
+    $product = $item->product()->first();
 
     $item->delete();
+
+    if ($product && $product->stock !== null) {
+        $product->increment('stock', (int) $item->quantity);
+    }
+
+    $this->updateOrderTotal($order);
 
    return response()->json([
     'items' => $order->items()->with('product')->get()
@@ -218,6 +261,18 @@ public function GetPendingOrders(){
     return response()->json([
         'PendingOrders' => $count
     ]);
+}
+
+private function updateOrderTotal(Order $order): void
+{
+    $total = $order->items()
+        ->get()
+        ->sum(function ($item) {
+            return $item->quantity * $item->price;
+        });
+
+    $order->total = $total;
+    $order->save();
 }
 
 }

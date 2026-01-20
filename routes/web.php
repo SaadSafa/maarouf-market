@@ -14,6 +14,11 @@ use App\Models\Cart;
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Dashboard (auth landing)
+Route::middleware(['auth'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
 // Product details
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
