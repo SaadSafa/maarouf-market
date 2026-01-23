@@ -25,15 +25,6 @@
             </div>
         </div>
 
-        {{-- RIGHT: USER --}}
-        @auth
-            <div class="flex items-center gap-2 sm:gap-3 text-white flex-shrink-0 ml-2">
-                <span class="hidden md:block text-sm truncate max-w-[120px] lg:max-w-none">{{ auth()->user()->name }}</span>
-                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 rounded-lg flex items-center justify-center font-semibold text-sm">
-                    {{ substr(auth()->user()->name,0,1) }}
-                </div>
-            </div>
-        @endauth
         {{-- Right: store toggle + search + user --}}
         <div class="flex items-center gap-4">
             @php $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true; @endphp
@@ -53,6 +44,15 @@
                 <span class="text-xs text-emerald-100">Search</span>
             </div>
             -->
-
     </div>
+
+        {{-- RIGHT: USER --}}
+        @auth
+            <div class="flex items-center gap-2 sm:gap-3 text-white flex-shrink-0 ml-2">
+                <span class="hidden md:block text-sm truncate max-w-[120px] lg:max-w-none">{{ auth()->user()->name }}</span>
+                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 rounded-lg flex items-center justify-center font-semibold text-sm">
+                    {{ substr(auth()->user()->name,0,1) }}
+                </div>
+            </div>
+        @endauth
 </header>
