@@ -44,7 +44,7 @@ class CheckoutController extends Controller
 
         //checkout relies on each cart item's stored price_at_time snapshot
         $orderTotal = $cart->items->sum(function($item){
-            $price = $item->price_at_time ?? $item->product->price;
+            $price = $item->price_at_time ?? $item->product->effective_price;
             return $item->quantity * $price;
         });
 
@@ -61,7 +61,7 @@ class CheckoutController extends Controller
         ]);
 
         foreach($cart->items as $item){
-            $priceSnapshot = $item->price_at_time ?? $item->product->price;
+            $priceSnapshot = $item->price_at_time ?? $item->product->effective_price;
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,

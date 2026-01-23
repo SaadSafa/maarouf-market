@@ -1,13 +1,13 @@
 @props(['product'])
 
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col overflow-hidden 
-            hover:shadow-lg hover:border-green-500 transition">
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col overflow-hidden 
+            hover:shadow-md hover:border-green-500 transition">
 
     {{-- Product Image --}}
     <a href="{{ $product->is_active ? route('product.show', $product->id) : '#' }}" 
         class="relative block {{ !$product->is_active ? 'pointer-events-none' : '' }}">
 
-        <div class="aspect-[1.2] bg-slate-100 overflow-hidden">
+        <div class="aspect-[1/1] bg-slate-100 overflow-hidden">
             <img 
                 src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/400x400?text=Product' }}"
                 alt="{{ $product->name }}"
@@ -36,10 +36,10 @@
     </a>
 
     {{-- Product Content --}}
-    <div class="flex-1 flex flex-col px-3 pt-2 pb-3">
+    <div class="flex-1 flex flex-col px-2.5 pt-2 pb-2.5">
 
         {{-- Name --}}
-        <h3 class="text-sm font-semibold text-slate-900 line-clamp-2 leading-snug">
+        <h3 class="text-[13px] font-semibold text-slate-900 line-clamp-2 leading-snug">
             {{ $product->name }}
         </h3>
 
@@ -52,10 +52,21 @@
 
         {{-- Price + Details --}}
         <div class="mt-1.5 flex items-center justify-between">
-            <p class="text-[14px] font-extrabold text-green-600">
-                {{ number_format($product->price, 0) }}
-                <span class="text-[10px] font-normal">L.L</span>
-            </p>
+            @php
+                $displayPrice = $product->effective_price;
+                $hasDiscount = $product->discount_price !== null && $product->discount_price < $product->price;
+            @endphp
+            <div class="leading-tight">
+                <p class="text-[13px] font-extrabold text-green-600">
+                    {{ number_format($displayPrice, 0) }}
+                    <span class="text-[10px] font-normal">L.L</span>
+                </p>
+                @if($hasDiscount)
+                    <p class="text-[10px] text-slate-400 line-through">
+                        {{ number_format($product->price, 0) }} L.L
+                    </p>
+                @endif
+            </div>
 
             <a href="{{ route('product.show', $product->id) }}"
                class="text-[10px] text-slate-600 hover:text-green-600 hover:underline ml-1">
@@ -112,7 +123,7 @@
                 {{-- Add Button --}}
                 <button type="submit"
                         class="flex-1 text-[11px] font-semibold bg-green-600 hover:bg-green-700 text-white 
-                            rounded-full py-1.5 shadow-md hover:shadow-lg transition">
+                            rounded-full py-1.5 shadow-sm hover:shadow-md transition">
                     Add
                 </button>
             </form>

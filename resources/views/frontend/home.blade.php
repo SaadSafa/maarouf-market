@@ -59,17 +59,38 @@
 
 
     {{-- ============================= --}}
-    {{-- Categories Section (Grid Type 3) --}}
+    {{-- Categories Section (Slider) --}}
     {{-- ============================= --}}
     @if($categories->count())
         <section class="mb-5">
-            <h2 class="text-sm font-semibold text-slate-900 mb-2">Shop by Category</h2>
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-sm font-semibold text-slate-900">Shop by Category</h2>
+                <div class="hidden sm:flex items-center gap-2">
+                    <button type="button"
+                        data-slider-prev="#category-slider"
+                        class="h-7 w-7 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-green-600 hover:border-green-300 shadow-sm">
+                        <span class="sr-only">Previous</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <button type="button"
+                        data-slider-next="#category-slider"
+                        class="h-7 w-7 rounded-full border border-slate-200 bg-white text-slate-600 hover:text-green-600 hover:border-green-300 shadow-sm">
+                        <span class="sr-only">Next</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 6l6 6-6 6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div id="category-slider"
+                class="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth">
 
                 @foreach($categories as $category)
                     <a href="#"
-                       class="category-filter group flex flex-col items-center bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:border-green-500"
+                       class="category-filter group snap-start shrink-0 w-24 sm:w-28 md:w-32 flex flex-col items-center bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:border-green-500"
                        data-category="{{ $category->id }}">
 
                         {{-- Category Image --}}
@@ -80,7 +101,7 @@
                                      alt="{{ $category->name }}">
                             </div>
                         @else
-                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-700 text-xs">
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-700 text-[10px] font-semibold">
                                 {{ strtoupper(substr($category->name, 0, 2)) }}
                             </div>
                         @endif

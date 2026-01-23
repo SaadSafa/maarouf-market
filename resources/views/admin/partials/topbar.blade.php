@@ -34,6 +34,25 @@
                 </div>
             </div>
         @endauth
+        {{-- Right: store toggle + search + user --}}
+        <div class="flex items-center gap-4">
+            @php $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true; @endphp
+            <form method="POST" action="{{ route('admin.settings.store-toggle') }}">
+                @csrf
+                <input type="hidden" name="value" value="{{ $storeOpen ? 0 : 1 }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold border shadow-sm
+                        {{ $storeOpen ? 'bg-white text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200' }}">
+                    <span class="w-2 h-2 rounded-full {{ $storeOpen ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                    {{ $storeOpen ? 'Store Open' : 'Store Closed' }}
+                </button>
+            </form>
+
+            <!--
+            <div class="hidden md:flex items-center bg-emerald-500/40 rounded-xl px-3 py-1.5">
+                <span class="text-xs text-emerald-100">Search</span>
+            </div>
+            -->
 
     </div>
 </header>
