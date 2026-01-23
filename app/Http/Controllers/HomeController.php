@@ -87,7 +87,7 @@ class HomeController extends Controller
         $query->orderBy('is_active', 'desc')
                 ->orderBy('id', 'desc');
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(10)->withQueryString();
 
         return view('partials.products-grid', compact('products'))->render();
     }

@@ -14,6 +14,11 @@ use App\Models\Cart;
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Dashboard (auth landing)
+Route::middleware(['auth'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
 // Product details
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
@@ -21,11 +26,13 @@ Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.s
 Route::get('/ajax/products', [HomeController::class, 'ajaxProducts'])->name("ajax.products");
 Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
 
-// Cart (guests and logged-in)
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+// Cart (guests and logged-in) — guarded by shop toggle
+Route::middleware(['shop.open'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+});
 
 // Logged-in user routes
 Route::middleware(['auth'])->group(function () {
@@ -35,9 +42,11 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Checkout
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+    // Checkout (guarded by shop toggle)
+    Route::middleware(['shop.open'])->group(function () {
+        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+        Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+    });
 
     // User orders
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
