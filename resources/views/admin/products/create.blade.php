@@ -95,6 +95,7 @@
                         <div>
                             <label class="text-sm font-medium text-slate-700">Stock Quantity</label>
                             <input 
+                            value="5"
                                 type="number" 
                                 name="stock"
                                 class="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-emerald-500"

@@ -3,42 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Maarouf Market Admin')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js','resources/css/admin/history-tab.css'])
-    <script>
-    window.csrf = "{{ csrf_token() }}";
-</script>
 
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/css/admin/history-tab.css'
+    ])
+
+    <script>
+        window.csrf = "{{ csrf_token() }}";
+    </script>
 </head>
 
-<body class="min-h-screen bg-slate-50 font-sans flex">
+<body class="min-h-screen bg-slate-50 font-sans">
+
+<div class="flex min-h-screen">
 
     {{-- SIDEBAR --}}
-    @include('admin.partials.sidebar')
+    <aside
+        id="adminSidebar"
+        class="
+            fixed inset-y-0 left-0 z-50 w-72
+            bg-slate-900 text-white
+            transform -translate-x-full
+            lg:translate-x-0
+            transition-transform duration-300
+        "
+    >
+        @include('admin.partials.sidebar')
+    </aside>
 
-    {{-- RIGHT SIDE CONTENT --}}
-    <div class="flex-1 min-h-screen flex flex-col
-                lg:pl-4      {{-- desktop sidebar offset --}}
-                pl-72          {{-- mobile full width --}}
-    ">
+    {{-- OVERLAY (mobile only) --}}
+    <div
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
+        onclick="toggleSidebar()"
+    ></div>
+
+    {{-- MAIN CONTENT --}}
+    <div class="flex-1 flex flex-col lg:ml-72">
 
         {{-- TOPBAR --}}
-        <div class="fixed top-0 right-0 
-                    lg:left-72     {{-- desktop offset --}}
-                    left-0         {{-- mobile full width --}}
-                    h-15 z-40 bg-white shadow">
+        <header
+            class="
+                fixed top-0 left-0 right-0 z-30
+                h-16 bg-white shadow
+                flex items-center px-4
+                lg:left-72
+            "
+        >
+            {{-- MOBILE TOGGLE --}}
+            <button
+                onclick="toggleSidebar()"
+                class="lg:hidden mr-4 text-slate-700"
+            >
+                ☰
+            </button>
+
             @include('admin.partials.topbar')
-        </div>
+        </header>
 
         {{-- PAGE CONTENT --}}
-        <main class="
-            pt-24
-            p-3
-            lg:p-25   {{-- larger padding on desktop --}}
-        ">
+        <main class="pt-20 px-4 lg:px-10">
             @yield('content')
         </main>
 
     </div>
+
+</div>
+
+{{-- SIMPLE TOGGLE SCRIPT --}}
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
+</script>
 
 </body>
 </html>

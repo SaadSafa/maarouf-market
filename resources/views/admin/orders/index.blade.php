@@ -3,8 +3,10 @@
 @section('title', 'Orders')
 
 @section('content')
-<script>
-    const tab = "{{ $tab }}";
+  <script>
+    setInterval(() => {
+        location.reload();
+    }, 5000);
 </script>
 <div class="space-y-6">
 
@@ -82,8 +84,9 @@
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+        <!-- DESKTOP TABLE -->
+<div class="hidden lg:block overflow-x-auto">
+    <table class="min-w-[1100px] w-full text-sm">
                 <thead>
                     <tr class="text-left text-slate-500 border-b">
                         <th class="py-3 px-4">ID</th>
@@ -98,14 +101,14 @@
                     </tr>
                 </thead>
 
-                <tbody id="orders-data">
+                <tbody>
                     @forelse($orders as $order)
                         <tr class="border-b hover:bg-slate-50">
                             <td class="py-3 px-4">{{ $order->id }}</td>
                             <td class="py-3 px-4">{{ $order->manager_notes ?? '-' }}</td>
                             <td class="py-3 px-4">{{ $order->customer_name }}</td>
                             <td class="py-3 px-4">
-    @if ($tab != 'history')
+    @if ($tab != 'history')  
     <select id="orderStatus" class="status-select px-2 py-1 border rounded text-xs"
             data-id="{{ $order->id }}">
         @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
@@ -134,6 +137,7 @@
                             <td class="py-3 px-4">{{ ($order->created_at)->addMinutes(35) }}</td>
                             <td class="py-3 px-4">{{ $order->area ?? '-' }}</td>
                             <td class="py-3 px-4">-</td>
+
                             <td class="py-3 px-4 text-right">
                                 <a href="{{ route('admin.orders.show', $order) }}"
                                    class="text-emerald-600 text-sm">
@@ -151,6 +155,76 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- MOBILE CARDS -->
+<div class="lg:hidden space-y-4">
+
+    @forelse($orders as $order)
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 space-y-3">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-800">
+                    Order #{{ $order->id }}
+                </span>
+
+                <span class="text-xs px-2 py-1 rounded
+                    @if($order->status=='completed') bg-emerald-50 text-emerald-700
+                    @elseif($order->status=='cancelled') bg-red-50 text-red-700
+                    @else bg-amber-50 text-amber-700
+                    @endif">
+                    {{ ucfirst($order->status) }}
+                </span>
+            </div>
+
+            <!-- Customer -->
+            <div class="text-sm text-slate-700">
+                <span class="font-medium">Customer:</span>
+                {{ $order->customer_name }}
+            </div>
+
+            <!-- Area -->
+            <div class="text-sm text-slate-700">
+                <span class="font-medium">Area:</span>
+                {{ $order->area ?? '-' }}
+            </div>
+
+            <!-- Time -->
+            <div class="text-xs text-slate-500">
+                Arrived: {{ $order->created_at }} <br>
+                ETA: {{ $order->created_at->addMinutes(35) }}
+            </div>
+
+            <!-- Status Change (same logic) -->
+            @if($tab != 'history')
+                <select
+                    class="status-select w-full mt-2 px-3 py-2 border rounded-lg text-sm"
+                    data-id="{{ $order->id }}">
+                    @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
+                        <option value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>
+                            {{ ucfirst($st) }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
+
+            <!-- Actions -->
+            <div class="pt-2 flex justify-end">
+                <a href="{{ route('admin.orders.show', $order) }}"
+                   class="text-emerald-600 text-sm font-medium">
+                    View Details →
+                </a>
+            </div>
+
+        </div>
+    @empty
+        <div class="text-center text-slate-500 py-6">
+            No data found
+        </div>
+    @endforelse
+
+</div>
+
 
         <!-- Pagination -->
         <div class="p-4">

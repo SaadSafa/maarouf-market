@@ -14,6 +14,9 @@ class HomeController extends Controller
     {
 
         //Search
+         if (Auth::check() && Auth::user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
         $search = $request->input('search');
         $categoryId = $request->filled('category')
             ? (int) $request->input('category')

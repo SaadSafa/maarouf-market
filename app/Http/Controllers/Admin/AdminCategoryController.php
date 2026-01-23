@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+// use Illuminate\Container\Attributes\Storage;
+use Illuminate\Support\Facades\Storage; 
 use Illuminate\Http\Request;
+use Laravel\Pail\ValueObjects\Origin\Console;
+use Str;
 
 class AdminCategoryController extends Controller
 {
@@ -26,8 +30,17 @@ class AdminCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|max:255']);
-        Category::create($request->only('name'));
+        $imageRule = 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048|dimensions:max_width=2000,max_height=2000';
+
+        $validated = $request->validate(['name' => 'required|max:255','image' => $imageRule]);
+          if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->storeAs(
+                'products',
+                Str::uuid()->toString() . '.' . $request->file('image')->getClientOriginalExtension(),
+                'public'
+            );
+        }
+        Category::create($validated);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -39,14 +52,36 @@ class AdminCategoryController extends Controller
     }
 
     public function update(Request $request, Category $category)
-    {
-        $request->validate(['name' => 'required|max:255']);
+{
+    $imageRule = 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048|dimensions:max_width=2000,max_height=2000';
 
-        $category->update($request->only('name'));
+    $validated = $request->validate([
+        'name' => 'required|max:255',
+        'image' => $imageRule
+    ]);
 
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Category updated.');
+    if ($request->hasFile('image')) {
+        // Delete old image if exists
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+        
+        $validated['image'] = $request->file('image')->storeAs(
+            'products',
+            Str::uuid()->toString() . '.' . $request->file('image')->getClientOriginalExtension(),
+            'public'
+        );
+    } else {
+        // Remove image key if not uploaded to prevent overwriting with null
+        unset($validated['image']);
     }
+
+    $category->update($validated);
+
+    return redirect()->route('admin.categories.index')
+        ->with('success', 'Category updated.');
+}
+
 
     public function destroy(Category $category)
     {
