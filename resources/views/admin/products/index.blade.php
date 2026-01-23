@@ -17,6 +17,13 @@
             <h1 class="text-2xl font-bold text-slate-900">Products</h1>
             <p class="text-slate-500 mt-1">Manage your product catalog</p>
         </div>
+       <form method="GET" action="{{ route('admin.products.search') }}" class="inline-flex">
+    <input type="hidden" name="sort" value="price_asc">
+    <button type="submit"
+        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm shadow-emerald-200">
+        Sort By Price (0LBP)
+    </button>
+</form>
         <a href="{{ route('admin.products.create') }}"
            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm shadow-emerald-200">
             <span class="text-lg leading-none">+</span>
@@ -44,10 +51,16 @@
 
         </div>
         <div class="flex gap-2">
-            <select
+            <form method="GET" action="{{ route('admin.products.search') }}">
+            <select name="catid"
+             onchange="this.form.submit()"
                 class="h-10 px-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/70">
-                <option>All categories</option>
+                <option value="All Categories" {{ request('catid') == 'All Categories'? 'selected' : '' }}>All categories</option>
+                @foreach ($categories as $category)
+                <option value="{{ $category->id }}" {{ request('catid') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
             </select>
+            </form>
             <form method="GET" action="{{ route('admin.products.search') }}">
             <select name="status"
              onchange="this.form.submit()"
@@ -89,7 +102,7 @@
                                     </div>
                                     <div>
                                         <div class="text-sm font-medium text-slate-900">{{ $product->name }}</div>
-                                        <div class="text-xs text-slate-500">SKU: {{ $product->sku ?? 'N/A' }}</div>
+                                        <div class="text-xs text-slate-500">SKU: {{ $product->barcode ?? 'N/A' }}</div>
                                     </div>
                                 </div>
                             </td>

@@ -19,6 +19,7 @@
     </div>
 
     <form action="{{ route('admin.categories.update', $category) }}" method="POST"
+    enctype="multipart/form-data"
           class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
         @csrf
         @method('PUT')
@@ -26,6 +27,15 @@
         <div>
             <label class="text-sm font-medium text-slate-700">Category Name</label>
             <input type="text" name="name" value="{{ $category->name }}" required
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
+        </div>
+         <label class="text-sm font-medium text-slate-700">Category Image</label>
+        <div class="h-12 w-12 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center text-emerald-700 text-xl sm:text-xl font-bold flex-shrink-0 shadow-sm">
+                                <img src="{{asset('storage/' . $category->image) }}">
+                            </div>
+                            <div>
+                                 <label class="text-sm font-medium text-slate-700">want to change image?</label>
+            <input type="file" name="image" 
                    class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
         </div>
 

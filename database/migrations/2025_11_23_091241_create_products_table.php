@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->longText('description')->nullable();
-
+            
             $table->decimal('price', 10, 2);
             $table->decimal('discount_price', 10, 2)->nullable(); // for offers
 

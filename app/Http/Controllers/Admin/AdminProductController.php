@@ -19,6 +19,7 @@ class AdminProductController extends Controller
 
     public function index()
     {
+        $categories = Category::all(); 
         $products = Product::with('category')
             ->when(request()->q, function ($query) {
                 $query->where('name', 'like', '%' . request()->q . '%');
@@ -26,7 +27,7 @@ class AdminProductController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products','categories'));
     }
 
     public function create()
@@ -159,17 +160,28 @@ class AdminProductController extends Controller
 
 public function Search(Request $request)
 {
+    $categories = Category::all();
     $query = Product::query();
+    //sorting for price 0$
+    if ($request->filled('sort') && $request->catid !== '0') {
+        $query->where('price', 0);
+    }
 
-    // Filter by status
+      // Filter by ctaegory
+    if ($request->filled('catid') && $request->catid !== 'All Categories') {
+        $query->where('category_id', $request->catid);
+    }
+
+    //Filter by status
     if ($request->filled('status') && $request->status !== 'All status') {
         $query->where('is_active', $request->status === 'active' ? 1 : 0);
     }
 
     $products = $query->latest()->paginate(10);
 
-    return view('admin.products.index', compact('products'));
+    return view('admin.products.index', compact('products','categories'));
 }
+
 
 public function search_for_orders(Request $request)
 {

@@ -20,12 +20,19 @@
     </div>
 
     <form action="{{ route('admin.categories.store') }}" method="POST"
+    enctype="multipart/form-data"
           class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
         @csrf
 
         <div>
             <label class="text-sm font-medium text-slate-700">Category Name</label>
             <input type="text" name="name" required
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
+        </div>
+
+         <div>
+            <label class="text-sm font-medium text-slate-700">Category Image</label>
+            <input type="file" name="image" 
                    class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
         </div>
 
