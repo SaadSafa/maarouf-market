@@ -25,12 +25,35 @@
             </div>
         </div>
 
-        {{-- RIGHT: USER --}}
-        @auth
-            <div class="flex items-center gap-2 sm:gap-3 text-white flex-shrink-0 ml-2">
-                <span class="hidden md:block text-sm truncate max-w-[120px] lg:max-w-none">{{ auth()->user()->name }}</span>
-                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 rounded-lg flex items-center justify-center font-semibold text-sm">
-                    {{ substr(auth()->user()->name,0,1) }}
+        {{-- Right: store toggle + search + user --}}
+        <div class="flex items-center gap-4">
+            @php $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true; @endphp
+            <form method="POST" action="{{ route('admin.settings.store-toggle') }}">
+                @csrf
+                <input type="hidden" name="value" value="{{ $storeOpen ? 0 : 1 }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold border shadow-sm
+                        {{ $storeOpen ? 'bg-white text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200' }}">
+                    <span class="w-2 h-2 rounded-full {{ $storeOpen ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                    {{ $storeOpen ? 'Store Open' : 'Store Closed' }}
+                </button>
+            </form>
+
+            <!--
+            <div class="hidden md:flex items-center bg-emerald-500/40 rounded-xl px-3 py-1.5">
+                <span class="text-xs text-emerald-100">Search</span>
+            </div>
+            -->
+
+            @auth
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex flex-col items-end text-emerald-100">
+                        <span class="text-sm font-medium">{{ auth()->user()->name }}</span>
+                        <span class="text-xs">{{ auth()->user()->email }}</span>
+                    </div>
+                    <div class="w-9 h-9 rounded-lg bg-white/20 text-white flex items-center justify-center uppercase text-sm">
+                        {{ substr(auth()->user()->name,0,1) }}
+                    </div>
                 </div>
             </div>
         @endauth
