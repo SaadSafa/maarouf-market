@@ -1,5 +1,5 @@
 @php
-    $adminWhatsapp = config('services.admin.whatsapp', '96170000000');
+    $adminWhatsapp = config('services.admin.whatsapp', '96176912663');
 @endphp
 
 {{-- Desktop Footer --}}
@@ -59,7 +59,7 @@
                 </li>
                 <li>
                     <span class="font-medium">Working Hours:</span><br>
-                    8:00 AM - 11:00 PM
+                    10:00 AM - 6:00 PM
                 </li>
             </ul>
         </div>

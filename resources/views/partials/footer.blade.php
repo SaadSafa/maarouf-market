@@ -1,6 +1,6 @@
 @php
     // Admin WhatsApp for contact (change number as needed)
-    $adminWhatsapp = config('services.admin.whatsapp', '96170000000');
+    $adminWhatsapp = config('services.admin.whatsapp', '96176912663');
 @endphp
 
 {{-- Mobile Bottom Navigation --}}
