@@ -3,10 +3,10 @@
 @endphp
 
 {{-- Desktop Footer --}}
-<footer class="hidden sm:block bg-white border-t border-slate-200 mt-10">
+<footer class="hidden sm:block bg-white/85 backdrop-blur border-t border-emerald-100 mt-12">
     <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm text-slate-700">
 
-        {{-- Column 1 — Logo + About --}}
+        {{-- Column 1 - Logo + About --}}
         <div>
             <div class="flex items-center gap-2 mb-3">
                 <span class="inline-flex items-center justify-center rounded-xl bg-green-600 text-white w-8 h-8 text-lg font-bold">
@@ -19,12 +19,12 @@
 
             <p class="text-slate-600 text-sm leading-relaxed">
                 Maarouf Market delivers fresh groceries, fruits, vegetables,
-                and essential household products right to your door — fast,
+                and essential household products right to your door - fast,
                 affordable and always high-quality.
             </p>
         </div>
 
-        {{-- Column 2 — Quick Links --}}
+        {{-- Column 2 - Quick Links --}}
         <div>
             <h3 class="font-semibold text-slate-900 mb-3">Quick Links</h3>
             <ul class="space-y-2">
@@ -43,7 +43,7 @@
             </ul>
         </div>
 
-        {{-- Column 3 — Contact --}}
+        {{-- Column 3 - Contact --}}
         <div>
             <h3 class="font-semibold text-slate-900 mb-3">Contact</h3>
 
@@ -59,7 +59,7 @@
                 </li>
                 <li>
                     <span class="font-medium">Working Hours:</span><br>
-                    8:00 AM – 11:00 PM
+                    8:00 AM - 11:00 PM
                 </li>
             </ul>
         </div>
@@ -67,6 +67,6 @@
     </div>
 
     <div class="border-t border-slate-200 py-3 text-center text-xs text-slate-500">
-        © {{ date('Y') }} Maarouf Market — All rights reserved.
+        (c) {{ date('Y') }} Maarouf Market - All rights reserved.
     </div>
 </footer>
