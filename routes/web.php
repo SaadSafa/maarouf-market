@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -10,6 +11,18 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Cart;
+
+Route::get('/test-resend', function() {
+    try {
+        Mail::raw('Test email from Resend!', function($message) {
+            $message->to('maaroufmarket@gmail.com')
+                   ->subject('Resend Test');
+        });
+        return 'Email sent! Check your inbox.';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
