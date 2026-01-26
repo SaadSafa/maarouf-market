@@ -12,17 +12,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Cart;
 
-Route::get('/test-resend', function() {
-    try {
-        Mail::raw('Test email from Resend!', function($message) {
-            $message->to('maaroufmarket@gmail.com')
-                   ->subject('Resend Test');
-        });
-        return 'Email sent! Check your inbox.';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
-});
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
