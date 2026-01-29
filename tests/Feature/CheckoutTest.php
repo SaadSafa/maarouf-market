@@ -73,4 +73,54 @@ class CheckoutTest extends TestCase
 
         $this->assertSame(0, $cart->items()->count());
     }
+
+    public function test_checkout_rolls_back_if_order_items_fail(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::factory()->create(['is_active' => 1]);
+        $product = Product::factory()->create([
+            'category_id' => $category->id,
+            'price' => 50,
+            'discount_price' => null,
+            'is_active' => 1,
+        ]);
+
+        $cart = Cart::create([
+            'user_id' => $user->id,
+            'session_id' => 'test-session',
+        ]);
+
+        CartItem::create([
+            'cart_id' => $cart->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'price_at_time' => 50,
+        ]);
+
+        $this->withoutExceptionHandling();
+
+        $originalDispatcher = \App\Models\OrderItem::getEventDispatcher();
+        $dispatcher = new \Illuminate\Events\Dispatcher();
+        \App\Models\OrderItem::setEventDispatcher($dispatcher);
+        \App\Models\OrderItem::creating(function () {
+            throw new \Exception('Order item failure');
+        });
+
+        try {
+            $this->actingAs($user)->post(route('checkout.confirm'), [
+                'customer_name' => 'Test User',
+                'customer_phone' => '123456',
+                'address' => 'Test Address',
+                'area' => 'Test Area',
+                'note' => 'Leave at door',
+            ]);
+
+            $this->fail('Expected exception was not thrown.');
+        } catch (\Exception $e) {
+            $this->assertSame(0, Order::count());
+            $this->assertSame(1, CartItem::count());
+        } finally {
+            \App\Models\OrderItem::setEventDispatcher($originalDispatcher);
+        }
+    }
 }

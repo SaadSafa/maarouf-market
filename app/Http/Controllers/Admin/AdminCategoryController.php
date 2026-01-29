@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Storage; 
 use Illuminate\Http\Request;
 use Laravel\Pail\ValueObjects\Origin\Console;
-use Str;
+use Illuminate\Support\Str;
 
 class AdminCategoryController extends Controller
 {
