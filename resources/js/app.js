@@ -8,6 +8,7 @@ import './toast';
 import './category-product-ajax.js';
 import './category-slider';
 import './password-toggle';
+import './fetch-location.js';
 
 import '../js/admin/order-show.js';
 import '../js/admin/product-status.js';
