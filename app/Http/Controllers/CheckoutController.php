@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
@@ -48,32 +49,34 @@ class CheckoutController extends Controller
             return $item->quantity * $price;
         });
 
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'customer_name' => $validated['customer_name'],
-            'customer_phone' => $validated['customer_phone'],
-            'address' => $validated['address'],
-            'area' => $validated['area'] ?? null,
-            'note' => $validated['note'] ?? null,
-            'status' => 'placed',
-            'total' => $orderTotal,
-            //'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
-        ]);
-
-        foreach($cart->items as $item){
-            $priceSnapshot = $item->price_at_time ?? $item->product->effective_price;
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $priceSnapshot,
-                //'price' => $item->product->price,
+        return DB::transaction(function () use ($validated, $cart, $orderTotal) {
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'customer_name' => $validated['customer_name'],
+                'customer_phone' => $validated['customer_phone'],
+                'address' => $validated['address'],
+                'area' => $validated['area'] ?? null,
+                'note' => $validated['note'] ?? null,
+                'status' => 'placed',
+                'total' => $orderTotal,
+                //'total' => $cart->items->sum(fn($i) => $i->quantity * $i->product->price),
             ]);
-        }
 
-        // Clear cart
-        $cart->items()->delete();
+            foreach ($cart->items as $item) {
+                $priceSnapshot = $item->price_at_time ?? $item->product->effective_price;
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $priceSnapshot,
+                    //'price' => $item->product->price,
+                ]);
+            }
 
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+            // Clear cart
+            $cart->items()->delete();
+
+            return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+        });
     }
 }

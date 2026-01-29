@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminProductController extends Controller
 {
@@ -42,11 +43,11 @@ class AdminProductController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0|lte:price',
             'stock' => 'nullable|integer|min:0',
-            'barcode' => 'nullable|string|max:64',
+            'barcode' => ['nullable', 'string', 'max:64', Rule::unique('products', 'barcode')],
             'description' => 'nullable|string',
             'image' => $imageRule,
         ]);
@@ -93,7 +94,7 @@ class AdminProductController extends Controller
             'stock' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
             'image' => $imageRule,
-            'barcode' => 'nullable|string|max:64',
+            'barcode' => ['nullable', 'string', 'max:64', Rule::unique('products', 'barcode')->ignore($product->id)],
         ]);
 
         if ($request->hasFile('image')) {

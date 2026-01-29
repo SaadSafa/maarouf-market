@@ -25,7 +25,7 @@ class AdminDashboardController extends Controller
         $todayRevenue = Order::whereDate('created_at', today())->sum('total');
         $monthRevenue = Order::whereMonth('created_at', now()->month)
     ->whereYear('created_at', now()->year) 
-    ->where('status', '!=', 'Cancelled') // exclude cancelled orders
+    ->where('status', '!=', 'cancelled') // exclude cancelled orders
     ->sum('total');
 
         $recentOrders = Order::latest()->take(8)->get();
@@ -39,7 +39,7 @@ class AdminDashboardController extends Controller
             DB::raw('SUM(total) as revenue')
         )
         ->where('created_at', '>=', Carbon::now()->subDays(6)->startOfDay())
-        ->where('status', '!=', 'Cancelled') // exclude cancelled orders
+        ->where('status', '!=', 'cancelled') // exclude cancelled orders
         ->groupBy(DB::raw('DATE(created_at)'))
         ->orderBy('date', 'ASC')
         ->get()

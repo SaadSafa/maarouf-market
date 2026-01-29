@@ -36,9 +36,15 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
     
-    public static function monthlyChanged(){
-        $lastMonth = Product::whereMonth('created_at', now()->subMonth()->month)->count();
-        $thisMonth = Product::whereMonth('created_at', now()->month)->count();
+    public static function monthlyChanged()
+    {
+        $lastMonthDate = now()->subMonth();
+        $lastMonth = Product::whereMonth('created_at', $lastMonthDate->month)
+            ->whereYear('created_at', $lastMonthDate->year)
+            ->count();
+        $thisMonth = Product::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
         $change = $lastMonth > 0
         ? (($thisMonth - $lastMonth) / $lastMonth) * 100
