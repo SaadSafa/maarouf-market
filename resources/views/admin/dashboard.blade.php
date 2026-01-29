@@ -83,22 +83,23 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         {{-- CHART --}}
-        <div class="xl:col-span-2 bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                <div>
-                    <h2 class="text-sm font-semibold text-slate-900">
-                        Revenue Overview
-                    </h2>
-                    <p class="text-xs text-slate-500">Last 7 days</p>
-                </div>
-                <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
-                    +8.5% growth
-                </span>
-            </div>
-            <div class="h-52 sm:h-64 flex items-center justify-center text-slate-400 text-sm">
-                Chart placeholder
-            </div>
+<div class="xl:col-span-2 bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div>
+            <h2 class="text-sm font-semibold text-slate-900">
+                Revenue Overview
+            </h2>
+            <p class="text-xs text-slate-500">Last 7 days</p>
         </div>
+        <span class="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+            +8.5% growth
+        </span>
+    </div>
+    <div style="height: 300px;">
+    <canvas id="revenueChart"></canvas>
+</div>
+</div>
+
 
         {{-- LOW STOCK --}}
         <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
@@ -179,4 +180,78 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: @json($revenueData['labels']),
+            datasets: [{
+                label: 'Revenue ($)',
+                data: @json($revenueData['data']),
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#10b981',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    padding: 12,
+                    titleColor: '#f1f5f9',
+                    bodyColor: '#f1f5f9',
+                    borderColor: '#334155',
+                    borderWidth: 1,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#f1f5f9',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        callback: function(value) {
+                            return 'LBP' + (value / 1000) + 'k';
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#64748b'
+                    }
+                }
+            }
+        }
+    });
+</script>
+@endpush
+
 @endsection
