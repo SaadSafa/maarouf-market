@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -63,5 +64,5 @@ Route::post('products/{product}/update-status', [AdminProductController::class,'
     Route::post('/settings/store-toggle', [AdminSettingController::class, 'toggleShop'])
         ->name('admin.settings.store-toggle');
 
-
+        Route::post('/logout',[AuthenticatedSessionController::class,'destroy'])->name('admin.logout');
 });

@@ -141,10 +141,12 @@
                 <p class="text-xs text-slate-500">admin@example.com</p>
             </div>
         </div>
-
-        <button class="mt-3 w-full bg-emerald-600 text-white py-2 rounded-lg shadow hover:bg-emerald-700 transition">
+        <form action="{{ route("admin.logout") }}" method="post">
+            @csrf
+        <button type="submit" class="mt-3 w-full bg-emerald-600 text-white py-2 rounded-lg shadow hover:bg-emerald-700 transition">
             Logout
         </button>
+        </form>
     </div>
 
 </aside>
