@@ -5,7 +5,7 @@
     $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true;
 @endphp
 
-<nav class="bg-white fixed top-0 inset-x-0 z-50 border-b border-slate-200 shadow-sm">
+<nav class="bg-white/90 backdrop-blur fixed top-0 inset-x-0 z-50 border-b border-emerald-100 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 
         {{-- Logo --}}
@@ -24,9 +24,9 @@
             <input autocomplete="off"
                    type="text"
                    name="search"
-                   placeholder="Search for products…"
+                   placeholder="Search for products"
                    value="{{ request('search') }}"
-                   class="w-full rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                   class="w-full rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
         </form>
 
         {{-- Right side --}}
@@ -35,7 +35,7 @@
             {{-- Profile Dropdown (always visible) --}}
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open"
-                        class="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-green-100 text-green-700 font-bold">
+                        class="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold ring-1 ring-emerald-200/60">
                     @auth
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     @else
@@ -80,7 +80,7 @@
 
             {{-- Cart --}}
             <a href="{{ route('cart.index') }}"
-               class="relative flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-green-50">
+               class="relative flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white/90 hover:bg-emerald-50">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      class="w-5 h-5 text-slate-700"
                      fill="none"
@@ -112,9 +112,9 @@
         <input autocomplete="off"
                type="text"
                name="search"
-               placeholder="Search for products…"
+               placeholder="Search for products"
                value="{{ request('search') }}"
-               class="w-full rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm
+               class="w-full rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm
                       focus:outline-none focus:ring-2 focus:ring-green-500">
     </form>
 </nav>

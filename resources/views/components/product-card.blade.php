@@ -1,7 +1,7 @@
 @props(['product'])
 
-<div class="bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col overflow-hidden 
-            hover:shadow-md hover:border-green-500 transition">
+<div class="bg-white/95 rounded-xl shadow-sm border border-slate-100 flex flex-col overflow-hidden 
+            hover:shadow-md hover:border-green-500 hover:-translate-y-0.5 transition">
 
     {{-- Product Image --}}
     <a href="{{ $product->is_active ? route('product.show', $product->id) : '#' }}" 

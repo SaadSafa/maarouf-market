@@ -9,12 +9,12 @@
     {{-- ============================= --}}
     @if($sliders->count())
         <section class="mt-3 mb-6">
-            <div class="flex gap-3 overflow-x-auto pb-1">
+            <div class="flex gap-3 overflow-x-auto pb-1 snap-x snap-mandatory scroll-smooth">
 
                 @foreach($sliders as $slider)
                     <a href="{{ url('/?category=' . ($slider->category_id ?? '')) }}"
-                       class="min-w-[85%] sm:min-w-[60%] lg:min-w-[40%]">
-                        <div class="relative rounded-2xl overflow-hidden shadow-sm">
+                       class="min-w-[85%] sm:min-w-[60%] lg:min-w-[40%] snap-start">
+                        <div class="relative rounded-3xl overflow-hidden shadow-md ring-1 ring-black/5 transition hover:shadow-lg">
                             <img
                                 src="{{ asset('storage/' . $slider->image) }}"
                                 alt="{{ $slider->title }}"
@@ -62,7 +62,7 @@
     {{-- Categories Section (Slider) --}}
     {{-- ============================= --}}
     @if($categories->count())
-        <section class="mb-5">
+        <section class="mb-6">
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-sm font-semibold text-slate-900">Shop by Category</h2>
                 <div class="hidden sm:flex items-center gap-2">
@@ -85,12 +85,16 @@
                 </div>
             </div>
 
-            <div id="category-slider"
-                class="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth">
+            <div class="relative slider-fade">
+                <div id="category-slider"
+                    class="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth">
 
                 @foreach($categories as $category)
+                    @php
+                        $isActiveCategory = (string) request('category') === (string) $category->id;
+                    @endphp
                     <a href="#"
-                       class="category-filter group snap-start shrink-0 w-24 sm:w-28 md:w-32 flex flex-col items-center bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:border-green-500"
+                       class="category-filter group snap-start shrink-0 w-24 sm:w-28 md:w-32 flex flex-col items-center rounded-2xl border p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-green-500 {{ $isActiveCategory ? 'bg-emerald-50 border-green-500' : 'bg-white/90 border-slate-100' }}"
                        data-category="{{ $category->id }}">
 
                         {{-- Category Image --}}
@@ -112,6 +116,7 @@
                     </a>
                 @endforeach
 
+                </div>
             </div>
         </section>
     @endif

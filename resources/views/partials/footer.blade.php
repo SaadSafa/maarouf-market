@@ -1,10 +1,10 @@
 @php
     // Admin WhatsApp for contact (change number as needed)
-    $adminWhatsapp = config('services.admin.whatsapp', '96170000000');
+    $adminWhatsapp = config('services.admin.whatsapp', '96176912663');
 @endphp
 
 {{-- Mobile Bottom Navigation --}}
-<footer class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-200 sm:hidden pointer-events-auto">
+<footer class="fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur border-t border-emerald-100 sm:hidden pointer-events-auto">
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between py-2 text-xs text-slate-700">
 

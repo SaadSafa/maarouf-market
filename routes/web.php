@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Cart;
 
+
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

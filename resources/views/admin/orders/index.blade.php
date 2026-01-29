@@ -169,9 +169,9 @@
                 </span>
 
                 <span class="text-xs px-2 py-1 rounded
-                    @if($order->status=='completed') bg-emerald-50 text-emerald-700
-                    @elseif($order->status=='cancelled') bg-red-50 text-red-700
-                    @else bg-amber-50 text-amber-700
+                    @if($order->status=='completed') 'bg-emerald-50 text-emerald-700'
+                    @elseif($order->status=='cancelled') 'bg-red-50 text-red-700'
+                    @else 'bg-amber-50 text-amber-700'
                     @endif">
                     {{ ucfirst($order->status) }}
                 </span>
