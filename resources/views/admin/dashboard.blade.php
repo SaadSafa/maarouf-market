@@ -157,9 +157,9 @@
                             <td class="py-2">{{ $order['total'] }}</td>
                             <td class="py-2">
                                 <span class="px-2 py-1 rounded-full text-xs
-                                    @if($order['status'] === 'Completed') bg-emerald-50 text-emerald-700
-                                    @elseif($order['status'] === 'In Delivery') bg-blue-50 text-blue-700
-                                    @elseif($order['status'] === 'Pending') bg-amber-50 text-amber-700
+                                    @if($order['status'] === 'Completed') 'bg-emerald-50 text-emerald-700'
+                                    @elseif($order['status'] === 'In Delivery') 'bg-blue-50 text-blue-700'
+                                    @elseif($order['status'] === 'Pending') 'bg-amber-50 text-amber-700'
                                     @else bg-slate-50 text-slate-700
                                     @endif">
                                     {{ $order['status'] }}

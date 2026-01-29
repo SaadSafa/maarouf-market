@@ -3,7 +3,7 @@
 @section('title', "Order #{$order->id}")
 
 @php
-    $isCompleted = $order->status === 'completed';
+    $isCompleted = $order->status === 'completed' || 'cancelled';
 @endphp
 
 @section('content')
@@ -20,17 +20,14 @@
         <!-- STATUS DROPDOWN -->
         <div>
             <label class="text-sm text-slate-600">Status:</label>
-            <select id="orderStatus"
-        data-id="{{ $order->id }}"
-        class="px-3 py-2 border rounded-xl text-sm
-               {{ $isCompleted ? 'bg-slate-100 cursor-not-allowed opacity-70' : '' }}"
-        {{ $isCompleted ? 'disabled' : '' }}>
-                @foreach(['pending','placed','picking','picked','indelivery','completed','cancelled'] as $st)
-                    <option value="{{ $st }}" {{ $order->status == $st ? 'selected' : '' }}>
-                        {{ ucfirst($st) }}
-                    </option>
-                @endforeach
-            </select>
+           <select id="orderStatus" class="status-select px-2 py-1 border rounded text-xs"
+            data-id="{{ $order->id }}">
+        @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
+            <option value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>
+                {{ ucfirst($st) }}
+            </option>
+        @endforeach
+    </select>
         </div>
     </div>
 

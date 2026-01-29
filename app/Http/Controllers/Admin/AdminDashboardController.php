@@ -24,7 +24,8 @@ class AdminDashboardController extends Controller
         $todayOrders = Order::whereDate('created_at', today())->count();
         $todayRevenue = Order::whereDate('created_at', today())->sum('total');
         $monthRevenue = Order::whereMonth('created_at', now()->month)
-    ->whereYear('created_at', now()->year)
+    ->whereYear('created_at', now()->year) 
+    ->where('status', '!=', 'Cancelled') // exclude cancelled orders
     ->sum('total');
 
         $recentOrders = Order::latest()->take(8)->get();
