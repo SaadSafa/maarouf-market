@@ -92,7 +92,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Location / Area</label>
                         <input type="text" name="area" id="UserArea"
                             value=""
-                            class="w-full px-3 py-2 border rounded-lg text-sm @error('location') border-red-500 @enderror" disabled>
+                            class="w-full px-3 py-2 border rounded-lg text-sm @error('area') border-red-500 @enderror" readonly>
                         @error('area')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
