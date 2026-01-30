@@ -5,6 +5,7 @@ import './cart-add';
 import './cart-count';
 import './order-cancel';
 import './toast';
+import './cart-popover';
 import './category-product-ajax.js';
 import './category-slider';
 import './password-toggle';

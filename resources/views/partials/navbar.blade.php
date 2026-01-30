@@ -5,7 +5,7 @@
     $storeOpen = function_exists('shopEnabled') ? shopEnabled() : true;
 @endphp
 
-<nav class="bg-white/90 backdrop-blur fixed top-0 inset-x-0 z-50 border-b border-emerald-100 shadow-sm">
+<nav class="backdrop-blur fixed top-0 inset-x-0 z-50 border-b shadow-sm nav-surface">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 
         {{-- Logo --}}

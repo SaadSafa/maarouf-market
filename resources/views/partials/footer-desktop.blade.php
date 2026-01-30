@@ -3,7 +3,7 @@
 @endphp
 
 {{-- Desktop Footer --}}
-<footer class="hidden sm:block bg-white/85 backdrop-blur border-t border-emerald-100 mt-12">
+<footer class="hidden sm:block backdrop-blur border-t mt-12 footer-surface">
     <div class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm text-slate-700">
 
         {{-- Column 1 - Logo + About --}}
