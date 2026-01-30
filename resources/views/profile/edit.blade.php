@@ -31,17 +31,17 @@
             {{-- Content --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100 profile-panel">
                         @include('profile.partials.update-profile-information-form')
                     </div>
 
-                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100 profile-panel">
                         @include('profile.partials.update-password-form')
                     </div>
                 </div>
 
                 <div class="space-y-6">
-                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+                    <div class="p-5 sm:p-6 bg-white rounded-2xl shadow-sm border border-slate-100 profile-panel">
                         @include('profile.partials.delete-user-form')
                     </div>
                 </div>

@@ -14,6 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(err => console.error(err));
     };
 
+    const toAjaxUrl = (href) => {
+        try {
+            const url = new URL(href, window.location.origin);
+            if (url.pathname === '/ajax/products') {
+                return url.toString();
+            }
+
+            url.pathname = '/ajax/products';
+            return url.toString();
+        } catch (error) {
+            return href;
+        }
+    };
+
     // Handle category clicks
     document.querySelectorAll(".category-filter").forEach(button => {
         button.addEventListener("click", function (e) {
@@ -31,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!link) return;
 
         e.preventDefault();
-        loadProducts(link.href);
+        loadProducts(toAjaxUrl(link.href));
     });
 
 });

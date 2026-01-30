@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-slate-50 text-slate-900 antialiased site-bg">
+<body class="bg-slate-50 text-slate-900 antialiased site-bg ui-shell layout-surface">
 
     {{ $slot }}
 

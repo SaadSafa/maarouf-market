@@ -4,7 +4,7 @@
 @endphp
 
 {{-- Mobile Bottom Navigation --}}
-<footer class="fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur border-t border-emerald-100 sm:hidden pointer-events-auto">
+<footer class="fixed bottom-0 inset-x-0 z-40 backdrop-blur border-t sm:hidden pointer-events-auto footer-surface">
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between py-2 text-xs text-slate-700">
 
