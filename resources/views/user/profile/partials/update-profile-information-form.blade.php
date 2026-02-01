@@ -47,6 +47,28 @@
             @endif
         </div>
 
+        <div class="profile-field">
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-2 block w-full"
+                inputmode="numeric" pattern="[0-9]{8}" minlength="8" maxlength="8"
+                :value="old('phone', $user->phone)" autocomplete="tel" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div class="profile-field">
+            <x-input-label for="address" :value="__('Address')" />
+            <x-text-input id="address" name="address" type="text" class="mt-2 block w-full"
+                :value="old('address', $user->address)" autocomplete="street-address" />
+            <x-input-error class="mt-2" :messages="$errors->get('address')" />
+        </div>
+
+        <div class="profile-field">
+            <x-input-label for="location" :value="__('Location / Area')" />
+            <x-text-input id="location" name="location" type="text" class="mt-2 block w-full"
+                :value="old('location', $user->location)" autocomplete="address-level2" />
+            <x-input-error class="mt-2" :messages="$errors->get('location')" />
+        </div>
+
         <div class="flex items-center gap-4 profile-actions">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
