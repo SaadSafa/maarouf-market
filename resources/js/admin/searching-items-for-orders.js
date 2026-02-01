@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+
     const input = document.getElementById("productSearch");
     const resultsBox = document.getElementById("searchResults");
     const productId = document.getElementById("productId");
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         productId.value = item.dataset.id;
 
         resultsBox.classList.add("hidden");
-        console.log("Selected Product ID:", item.dataset.id);
+        
     });
 
     // Hide dropdown when clicking outside
@@ -55,5 +55,4 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsBox.classList.add("hidden");
         }
     });
-});
 
