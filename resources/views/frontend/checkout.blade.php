@@ -44,12 +44,17 @@
 
             <div class="md:col-span-2 bg-white rounded-2xl shadow-sm p-4">
 
-                <form action="{{ route('checkout.confirm') }}" method="POST">
+                @if (auth()->user()->phone_verified_at)
+    <form action="{{ route('checkout.confirm') }}" method="POST">
+@else
+    <form action="{{ route('phone.verify.user') }}" method="POST">
+@endif
+    @csrf
 
                     @csrf
 
 
-
+                    @if (auth()->user()->phone_verified_at == null)
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
                         <input type="text" name="customer_name"
@@ -59,6 +64,7 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                    
 
 
 
@@ -66,12 +72,12 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
                         <input type="text" name="customer_phone"
                             value="{{ old('customer_phone', auth()->user()->phone ?? '') }}"
-                            class="w-full px-3 py-2 border rounded-lg text-sm @error('phone') border-red-500 @enderror">
+                            class="w-full px-3 py-2 border rounded-lg text-sm @error('customer_phone') border-red-500 @enderror">
                         @error('customer_phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
+                    @endif
 
 
 

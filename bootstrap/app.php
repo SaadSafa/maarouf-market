@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'guest' => RedirectIfAuthenticated::class,
         'admin' => AdminMiddleware::class,
         'shop.open' => EnsureShopEnabled::class,
+        'phone.verified' => \App\Http\Middleware\PhoneVerified::class,
     ]);
 })
 

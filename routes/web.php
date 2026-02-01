@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,6 +39,22 @@ Route::middleware(['shop.open'])->group(function () {
 // Logged-in user routes
 Route::middleware(['auth'])->group(function () {
 
+Route::get('/verify-phone', function () {
+    if (auth()->user()->phone_verified_at) {
+        return redirect()->route('checkout.index');
+    }else{
+        
+    }
+    return view('auth.verify-phone');
+})->name('phone.verify.page');
+
+Route::post('/verify-phone', [CheckoutController::class, 'verifyPhoneOtp'])
+    ->name('phone.verify');
+Route::post('/verify-phone-user', [CheckoutController::class, 'sendPhoneOtp'])
+    ->name('phone.verify.user');
+
+
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -46,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     // Checkout (guarded by shop toggle)
     Route::middleware(['shop.open'])->group(function () {
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-        Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+        Route::post('/checkout/confirm', [CheckoutController::class,'confirm'])->middleware(['auth', 'phone.verified'])->name('checkout.confirm');
     });
 
     // User orders
