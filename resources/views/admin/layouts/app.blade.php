@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="admin-page">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Maarouf Market Admin')</title>

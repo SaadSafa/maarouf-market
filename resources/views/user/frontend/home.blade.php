@@ -146,7 +146,7 @@
         </div>
 
         {{-- ajax load --}}
-        @include('partials.products-grid',['products' => $products])
+        @include('user.partials.products-grid',['products' => $products])
 
 
     </section>

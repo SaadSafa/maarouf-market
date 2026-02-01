@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\OfferSlider;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -59,7 +60,7 @@ class HomeController extends Controller
         $products = $query->paginate(10);
 
 
-        return view('frontend.home', compact(
+        return view('user.frontend.home', compact(
             'products',
             'categories',
             'sliders',

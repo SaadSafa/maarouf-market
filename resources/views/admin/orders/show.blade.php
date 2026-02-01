@@ -3,7 +3,7 @@
 @section('title', "Order #{$order->id}")
 
 @php
-    $isCompleted = $order->status === 'completed' || 'cancelled';
+    $isCompleted = $order->status === 'completed' || $order->status === 'cancelled';
 @endphp
 
 @section('content')
@@ -201,5 +201,4 @@
 
 </div>
 @endsection
-
 

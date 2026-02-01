@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\Cart;
@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class CheckoutController extends Controller
 {
@@ -22,7 +23,7 @@ class CheckoutController extends Controller
                     ->with('items.product')
                     ->first();
 
-        return view('frontend.checkout', compact('cart'));
+        return view('user.frontend.checkout', compact('cart'));
     }
 
     public function confirm(Request $request)

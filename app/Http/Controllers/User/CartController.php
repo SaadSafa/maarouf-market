@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -9,6 +9,7 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class CartController extends Controller
 {
@@ -17,7 +18,7 @@ class CartController extends Controller
         $cart = $this->activeCart($request);
         $items = $cart->items()->with('product')->get();
 
-        return view('frontend.cart', compact('cart', 'items'));
+        return view('user.frontend.cart', compact('cart', 'items'));
     }
 
     public function add(Request $request, $id)

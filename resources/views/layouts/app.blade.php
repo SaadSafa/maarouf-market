@@ -15,7 +15,7 @@
     <div class="min-h-screen flex flex-col">
 
         {{-- Top Navbar --}}
-        @include('partials.navbar')
+        @include('user.partials.navbar')
 
         <div class="pt-[110px] sm:pt-16">
             {{-- Store closed banner (persistent while closed or when flash is present) --}}
@@ -56,10 +56,10 @@
         </div>
 
         {{-- Desktop Footer --}}
-        @include('partials.footer-desktop')
+        @include('user.partials.footer-desktop')
 
         {{-- Bottom Navigation (mobile) --}}
-        @include('partials.footer')
+        @include('user.partials.footer')
 
     </div>
 
