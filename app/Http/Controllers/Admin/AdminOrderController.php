@@ -112,6 +112,13 @@ class AdminOrderController extends Controller
     // ---------------------------
     public function updateStatus(Request $request, Order $order)
     {
+        if ($this->isLocked($order)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'This order is locked and cannot be modified.',
+            ], 423);
+        }
+
         $request->validate([
             'status' => 'required|in:placed,picking,picked,indelivery,completed,cancelled,pending'
         ]);
@@ -128,6 +135,13 @@ class AdminOrderController extends Controller
 public function addItem(Request $request, Order $order)
 {
     try {
+        if ($this->isLocked($order)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'This order is locked and cannot be modified.',
+            ], 423);
+        }
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1'
@@ -183,6 +197,13 @@ public function addItem(Request $request, Order $order)
     public function updateItem(Request $request, OrderItem $item)
     {
         try {
+            if ($this->isLocked($item->order)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'This order is locked and cannot be modified.',
+                ], 423);
+            }
+
             $validated = $request->validate([
                 'quantity' => ['required', 'integer', 'min:1'],
             ]);
@@ -238,6 +259,12 @@ public function addItem(Request $request, Order $order)
 public function deleteItem(OrderItem $item) {
 
     $order = $item->order;
+    if ($this->isLocked($order)) {
+        return response()->json([
+            'success' => false,
+            'error' => 'This order is locked and cannot be modified.',
+        ], 423);
+    }
     $product = $item->product()->first();
 
     $item->delete();
@@ -273,6 +300,11 @@ private function updateOrderTotal(Order $order): void
 
     $order->total = $total;
     $order->save();
+}
+
+private function isLocked(Order $order): bool
+{
+    return in_array($order->status, ['completed', 'cancelled'], true);
 }
 
 }

@@ -109,8 +109,8 @@
                             <td class="py-3 px-4">{{ $order->customer_name }}</td>
                             <td class="py-3 px-4">
     @if ($tab != 'history')  
-    <select id="orderStatus" class="status-select px-2 py-1 border rounded text-xs"
-            data-id="{{ $order->id }}">
+    <select class="status-select px-2 py-1 border rounded text-xs"
+        data-id="{{ $order->id }}">
         @foreach(['placed','picking','picked','indelivery','completed','cancelled','pending'] as $st)
             <option value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>
                 {{ ucfirst($st) }}
@@ -120,7 +120,7 @@
 </td>
 @elseif($tab === 'history')
 
-<span id="orderStatus" class="status-select px-2 py-1 border rounded text-xs @if ($order->status == 'completed') bgordercomplete @else bgordercanceled 
+    <span class="status-select px-2 py-1 border rounded text-xs @if ($order->status == 'completed') bgordercomplete @else bgordercanceled 
 @endif"
             data-id="{{ $order->id }}">
         @foreach(['completed','cancelled'] as $st)

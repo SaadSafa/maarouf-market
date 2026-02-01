@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     function refresh() {
-        console.log('hi');
-        fetch('/admin/orders-refresh?tab='+ tab, {
+        if (typeof tab === 'undefined') {
+            return;
+        }
+        fetch('/admin/orders-refresh?tab=' + tab, {
             method: "GET",
             headers: { "Accept": "application/json" }
         })
@@ -53,10 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 } else {
                     const bgClass = order.status === 'completed' ? 'bgordercomplete' : 'bgordercanceled';
-                    console.log(Object.keys(order).length);
-
                     statusHTML = `
-                        <span id="orderStatus" class="status-select px-2 py-1 border rounded text-xs ${bgClass}"
+                        <span class="status-select px-2 py-1 border rounded text-xs ${bgClass}"
                               data-id="${order.id}">
                             ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                         </span>

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
@@ -14,7 +15,7 @@ class OrderController extends Controller
                         ->latest()
                         ->get();
 
-        return view('frontend.orders', compact('orders'));
+        return view('user.frontend.orders', compact('orders'));
     }
 
     public function show($id)
@@ -24,7 +25,7 @@ class OrderController extends Controller
                         ->with('items.product')
                         ->firstOrFail();
 
-        return view('frontend.order-details', compact('order'));
+        return view('user.frontend.order-details', compact('order'));
     }
 
     public function cancel($id)
