@@ -22,18 +22,20 @@ class CheckoutController extends Controller
         $cart = Cart::where('user_id', Auth::id())
                     ->with('items.product')
                     ->first();
+        $lastOrder = Order::where('user_id', Auth::id())->latest()->first();
 
-        return view('user.frontend.checkout', compact('cart'));
+        return view('user.frontend.checkout', compact('cart', 'lastOrder'));
     }
 
     public function confirm(Request $request)
     {
         $validated = $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
-            'customer_phone' => ['required', 'string', 'max:50'],
+            'customer_phone' => ['required', 'digits:8'],
             'address' => ['required', 'string', 'max:255'],
             'area' => ['required', 'string', 'max:255'],
             'note' => ['nullable', 'string', 'max:1000'],
+            'save_profile' => ['nullable', 'boolean'],
         ]);
 
         $cart = Cart::where('user_id', Auth::id())
@@ -76,6 +78,14 @@ class CheckoutController extends Controller
 
             // Clear cart
             $cart->items()->delete();
+
+            if (!empty($validated['save_profile'])) {
+                $user = Auth::user();
+                $user->phone = $validated['customer_phone'];
+                $user->address = $validated['address'];
+                $user->location = $validated['area'];
+                $user->save();
+            }
 
             return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
         });

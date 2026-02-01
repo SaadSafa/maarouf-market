@@ -53,7 +53,7 @@
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
                         <input type="text" name="customer_name"
-                            value="{{ old('customer_name', auth()->user()->name) }}"
+                            value="{{ old('customer_name', $lastOrder->customer_name ?? auth()->user()->name) }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm @error('full_name') border-red-500 @enderror">
                         @error('customer_name')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -65,7 +65,11 @@
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
                         <input type="text" name="customer_phone"
-                            value="{{ old('customer_phone', auth()->user()->phone ?? '') }}"
+                            value="{{ old('customer_phone', $lastOrder->customer_phone ?? auth()->user()->phone ?? '') }}"
+                            inputmode="numeric"
+                            pattern="[0-9]{8}"
+                            minlength="8"
+                            maxlength="8"
                             class="w-full px-3 py-2 border rounded-lg text-sm @error('phone') border-red-500 @enderror">
                         @error('customer_phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -78,7 +82,7 @@
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Address</label>
                         <input type="text" name="address"
-                            value="{{ old('address', auth()->user()->address ?? '') }}"
+                            value="{{ old('address', $lastOrder->address ?? auth()->user()->address ?? '') }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm @error('address') border-red-500 @enderror">
                         @error('address')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -91,7 +95,7 @@
                     <div class="mb-3">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Location / Area</label>
                         <input type="text" name="area" id="UserArea"
-                            value=""
+                            value="{{ old('area', $lastOrder->area ?? auth()->user()->location ?? '') }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm @error('area') border-red-500 @enderror" readonly>
                         @error('area')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -103,10 +107,19 @@
                     <div class="mb-4">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Note (optional)</label>
                         <textarea name="note" rows="3"
-                                class="w-full px-3 py-2 border rounded-lg text-sm @error('note') border-red-500 @enderror">{{ old('note') }}</textarea>
+                                class="w-full px-3 py-2 border rounded-lg text-sm @error('note') border-red-500 @enderror">{{ old('note', $lastOrder->note ?? '') }}</textarea>
                         @error('note')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" name="save_profile" value="1"
+                                   class="rounded border-gray-300 text-green-600 focus:ring-green-600"
+                                   {{ old('save_profile', 1) ? 'checked' : '' }}>
+                            Save these details to my profile
+                        </label>
                     </div>
 
 
@@ -185,4 +198,3 @@
 </div>
 
 @endsection
-
