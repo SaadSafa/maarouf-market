@@ -96,7 +96,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Location / Area</label>
                         <input type="text" name="area" id="UserArea"
                             value="{{ old('area', $lastOrder->area ?? auth()->user()->location ?? '') }}"
-                            class="w-full px-3 py-2 border rounded-lg text-sm @error('area') border-red-500 @enderror" readonly>
+                            class="w-full px-3 py-2 border rounded-lg text-sm @error('area') border-red-500 @enderror">
                         @error('area')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
