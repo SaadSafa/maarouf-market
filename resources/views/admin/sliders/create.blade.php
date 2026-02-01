@@ -31,6 +31,12 @@ late-100">
         </div>
 
         <div>
+            <label class="text-sm font-medium text-slate-700">Description</label>
+            <input type="text" name="description" required
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
+        </div>
+
+        <div>
             <label class="text-sm font-medium text-slate-700">Image</label>
             <input type="file" name="image" required
                    class="w-full text-sm text-slate-700">
@@ -39,8 +45,8 @@ late-100">
         <div>
             <label class="text-sm font-medium text-slate-700">Status</label>
             <select name="status" class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
             </select>
         </div>
 

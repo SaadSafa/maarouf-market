@@ -42,7 +42,7 @@
 @endphp
 
 <span class="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-semibold {{ $statusClass }}">
-    {{ ucfirst($slider->status) }}
+    {{ ucfirst($slider->is_active) }}
 </span>
 
                 </div>

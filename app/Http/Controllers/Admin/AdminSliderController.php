@@ -26,56 +26,64 @@ class AdminSliderController extends Controller
         return view('admin.sliders.create');
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title'     => 'required|max:255',
-            'subtitle'  => 'nullable|max:255',
-            'image'     => 'required|image|max:2048',
-            'is_active' => 'nullable|boolean',
-        ]);
+   public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title'       => 'required|max:255',
+        'description' => 'nullable|max:255',
+        'image'       => 'required|image|max:2048',
+        'status'      => 'required|boolean',
+    ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('sliders', 'public');
-        }
-
-        $validated['is_active'] = $request->boolean('is_active');
-
-        OfferSlider::create($validated);
-
-        return redirect()->route('admin.sliders.index')
-            ->with('success', 'Slider created.');
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('sliders', 'public');
     }
 
-    public function edit(OfferSlider $offerSlider)
+    // Map status to is_active for DB
+    $validated['is_active'] = $request->input('status');
+    unset($validated['status']); // remove 'status' to avoid errors
+
+    OfferSlider::create($validated);
+
+    return redirect()->route('admin.sliders.index')
+                     ->with('success', 'Slider created.');
+}
+
+   public function edit(OfferSlider $offerSlider)
 {
     return view('admin.sliders.edit', ['slider' => $offerSlider]);
 }
 
+public function update(Request $request, OfferSlider $offerSlider)
+{
+    $validated = $request->validate([
+        'title'     => 'required|max:255',
+        'description'  => 'nullable|max:255',
+        'image'     => 'nullable|image|max:2048',
+        'status'    => 'required|boolean',
+    ]);
 
-    public function update(Request $request, OfferSlider $slider)
-    {
-        $validated = $request->validate([
-            'title'     => 'required|max:255',
-            'subtitle'  => 'nullable|max:255',
-            'image'     => 'nullable|image|max:2048',
-            'is_active' => 'nullable|boolean',
-        ]);
 
-        if ($request->hasFile('image')) {
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
-            }
-            $validated['image'] = $request->file('image')->store('sliders', 'public');
+    if ($request->hasFile('image')) {
+        if ($offerSlider->image) {
+            Storage::disk('public')->delete($offerSlider->image);
         }
-
-        $validated['is_active'] = $request->boolean('is_active');
-
-        $slider->update($validated);
-
-        return redirect()->route('admin.sliders.index')
-            ->with('success', 'Slider updated.');
+        $validated['image'] = $request->file('image')->store('sliders', 'public');
     }
+
+
+    $validated['is_active'] = $request->input('status');
+    unset($validated['status']);
+
+
+    $offerSlider->update($validated);
+
+
+    return redirect()->route('admin.sliders.index')
+                     ->with('success', 'Slider updated.');
+}
+
+
 
     public function destroy(OfferSlider $slider)
     {
@@ -88,4 +96,5 @@ class AdminSliderController extends Controller
         return redirect()->route('admin.sliders.index')
             ->with('success', 'Slider deleted.');
     }
+
 }
