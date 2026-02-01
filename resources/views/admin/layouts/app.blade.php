@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Maarouf Market Admin')</title>
+    <link rel="icon" href="/favicon.ico">
 
     @vite([
         'resources/css/app.css',
