@@ -51,7 +51,7 @@ class CheckoutTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('checkout.confirm'), [
             'customer_name' => 'Test User',
-            'customer_phone' => '123456',
+            'customer_phone' => '12345678',
             'address' => 'Test Address',
             'area' => 'Test Area',
             'note' => 'Leave at door',
@@ -109,7 +109,7 @@ class CheckoutTest extends TestCase
         try {
             $this->actingAs($user)->post(route('checkout.confirm'), [
                 'customer_name' => 'Test User',
-                'customer_phone' => '123456',
+                'customer_phone' => '12345678',
                 'address' => 'Test Address',
                 'area' => 'Test Area',
                 'note' => 'Leave at door',

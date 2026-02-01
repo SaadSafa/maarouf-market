@@ -90,6 +90,6 @@ class HomeController extends Controller
 
         $products = $query->paginate(10)->withQueryString();
 
-        return view('partials.products-grid', compact('products'))->render();
+        return view('user.partials.products-grid', compact('products'))->render();
     }
 }
