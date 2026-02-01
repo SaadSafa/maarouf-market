@@ -30,6 +30,12 @@
         </div>
 
         <div>
+            <label class="text-sm font-medium text-slate-700">Description</label>
+            <input type="text" name="description" value="{{ $slider->description }}"
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
+        </div>
+
+        <div>
             <label class="text-sm font-medium text-slate-700">Current Image</label>
             <img src="{{ asset('storage/' . $slider->image) }}" class="w-full rounded-lg mb-3">
             <input type="file" name="image" class="w-full text-sm">
@@ -38,10 +44,12 @@
         <div>
             <label class="text-sm font-medium text-slate-700">Status</label>
             <select name="status" class="w-full px-4 py-2.5 rounded-xl border border-slate-300">
-                <option value="active" @selected($slider->is_active==1)>Active</option>
-                <option value="inactive" @selected($slider->is_active==0)>Inactive</option>
-            </select>
+    <option value="1" @selected(intval($slider->is_active) === 1)>Active</option>
+    <option value="0" @selected(intval($slider->is_active) === 0)>Inactive</option>
+</select>
         </div>
+        
+
 
         <div class="flex justify-end">
             <button class="px-6 py-2.5 rounded-xl bg-emerald-600 text-white">Update</button>
