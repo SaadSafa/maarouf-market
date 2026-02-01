@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("Order Show JS Loaded!");
+
+  
     
 //to update the badge of order in sidebar
 async function updateOrderBadge() {
@@ -17,7 +17,7 @@ async function updateOrderBadge() {
         const badge = document.getElementById('orders-badge');
 
         if (!badge) {
-            console.log('Badge not found in DOM');
+            
             return;
         }
 
@@ -32,7 +32,7 @@ async function updateOrderBadge() {
         }
 
     } catch (e) {
-        console.log('updateOrderBadge error:', e.message);
+        
     }
 }
 
@@ -50,7 +50,6 @@ updateOrderBadge();
     let status = select.value;
     let orderId = select.dataset.id;
 
-    console.log("Updating:", orderId, status);
 
     fetch(`/admin/orders/${orderId}/status`, {
         method: "PATCH",
@@ -62,7 +61,7 @@ updateOrderBadge();
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Status updated:", data);
+       
     })
     .catch(err => console.error(err));
 });
@@ -182,4 +181,3 @@ updateOrderBadge();
     };
 
 
-});

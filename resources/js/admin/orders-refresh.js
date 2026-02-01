@@ -1,4 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
 
     function refresh() {
         if (typeof tab === 'undefined') {
@@ -92,4 +91,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     refresh();
     setInterval(refresh, 5000);
-});
+
