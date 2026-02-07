@@ -6,12 +6,38 @@ document.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     try {
+<<<<<<< ours
+<<<<<<< ours
         const response = await fetch(form.action, {
             method: 'POST',
             body: new FormData(form),
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
 
+=======
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+        if (csrfToken) {
+            headers['X-CSRF-TOKEN'] = csrfToken;
+        }
+
+=======
+>>>>>>> theirs
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+<<<<<<< ours
+        if (response.status === 419) {
+            showToast('Session expired. Please refresh and try again.');
+            return;
+        }
+
+>>>>>>> theirs
+=======
+>>>>>>> theirs
         if (response.status === 423) {
             const data = await response.json().catch(() => ({}));
             showToast(data.message || 'Ordering is currently paused.');
@@ -23,6 +49,14 @@ document.addEventListener('submit', async (event) => {
         if (result.success) {
             updateCartCount(result.cartCount);
             showToast("Item added to cart");
+            const qtyInput = form.querySelector('input[name="quantity"]');
+            if (qtyInput) {
+                qtyInput.value = qtyInput.min ? Math.max(1, parseInt(qtyInput.min, 10)) : 1;
+            }
+            const popover = form.closest('.cart-popover');
+            if (popover) {
+                popover.classList.remove('is-open');
+            }
         }
     } catch (err) {
         console.error('Add to cart error:', err);
