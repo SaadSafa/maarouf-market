@@ -68,12 +68,14 @@
                         <a href="{{ route('orders.index') }}"
                            class="block px-4 py-2 hover:bg-slate-100">Orders</a>
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="w-full text-left px-4 py-2 hover:bg-slate-100">
-                                Logout
-                            </button>
-                        </form>
+                        <button
+                            type="button"
+                            x-data
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-logout')"
+                            class="w-full text-left px-4 py-2 hover:bg-slate-100"
+                        >
+                            Logout
+                        </button>
                     @endauth
                 </div>
             </div>
@@ -118,3 +120,7 @@
                       focus:outline-none focus:ring-2 focus:ring-green-500">
     </form>
 </nav>
+
+@auth
+    @include('user.partials.logout-modal')
+@endauth

@@ -26,15 +26,19 @@
             </button>
         </form>
 
-        <form method="POST" action="{{ route('logout') }}" class="mt-4">
-            @csrf
-            <button class="text-sm text-gray-500 hover:underline">
-                Log out
-            </button>
-        </form>
+        <button
+            type="button"
+            x-data
+            x-on:click.prevent="$dispatch('open-modal', 'confirm-logout')"
+            class="text-sm text-gray-500 hover:underline mt-4"
+        >
+            Log out
+        </button>
 
     </div>
 
 </div>
+
+@include('user.partials.logout-modal')
 
 </x-guest-layout>
