@@ -6,38 +6,30 @@ document.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     try {
-<<<<<<< ours
-<<<<<<< ours
-        const response = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-
-=======
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const formToken = form.querySelector('input[name="_token"]')?.value;
         const headers = { 'X-Requested-With': 'XMLHttpRequest' };
-        if (csrfToken) {
-            headers['X-CSRF-TOKEN'] = csrfToken;
+        if (csrfToken || formToken) {
+            headers['X-CSRF-TOKEN'] = csrfToken || formToken;
         }
 
-=======
->>>>>>> theirs
+        const body = new FormData(form);
+        if (!body.get('_token') && (csrfToken || formToken)) {
+            body.append('_token', csrfToken || formToken);
+        }
+
         const response = await fetch(form.action, {
             method: 'POST',
-            body: new FormData(form),
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            body,
+            credentials: 'same-origin',
+            headers
         });
 
-<<<<<<< ours
         if (response.status === 419) {
-            showToast('Session expired. Please refresh and try again.');
+            showToast('Session expired. Retrying...');
+            form.submit();
             return;
         }
-
->>>>>>> theirs
-=======
->>>>>>> theirs
         if (response.status === 423) {
             const data = await response.json().catch(() => ({}));
             showToast(data.message || 'Ordering is currently paused.');
