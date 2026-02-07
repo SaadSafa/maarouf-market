@@ -117,6 +117,7 @@
                                 </svg>
                             </button>
                         </div>
+                        @include('user.partials.password-requirements', ['inputId' => 'password'])
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
